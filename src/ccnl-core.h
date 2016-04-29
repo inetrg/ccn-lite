@@ -244,6 +244,9 @@ struct ccnl_content_s {
     unsigned short flags;
 #define CCNL_CONTENT_FLAGS_STATIC  0x01
 #define CCNL_CONTENT_FLAGS_STALE   0x02
+#define CCNL_CONTENT_FLAGS_USER1   0x40
+#define CCNL_CONTENT_FLAGS_USER2   0x80
+
     // NON-CONFORM: "The [ContentSTore] MUST also implement the Staleness Bit."
     // >> CCNL: currently no stale bit, old content is fully removed <<
     int last_used;
