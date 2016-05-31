@@ -617,7 +617,7 @@ ccnl_prefix_dup(struct ccnl_prefix_s *prefix)
     }
 
     if (prefix->chunknum) {
-        p->chunknum = (int*) ccnl_malloc(sizeof(int));
+        p->chunknum = &(p->chunknum_buf);
         *p->chunknum = *prefix->chunknum;
     }
 
@@ -686,9 +686,7 @@ ccnl_prefix_addChunkNum(struct ccnl_prefix_s *prefix, unsigned int chunknum)
             cmp[1] = chunknum;
             if(ccnl_prefix_appendCmp(prefix, cmp, 2) < 0)
                 return -1;
-            if (prefix->chunknum)
-                ccnl_free(prefix->chunknum);
-            prefix->chunknum = (int*) ccnl_malloc(sizeof(int));
+            prefix->chunknum = &(prefix->chunknum_buf);
             *prefix->chunknum = chunknum;
         }
         break;
@@ -705,9 +703,7 @@ ccnl_prefix_addChunkNum(struct ccnl_prefix_s *prefix, unsigned int chunknum)
             cmp[4] = chunknum;
             if(ccnl_prefix_appendCmp(prefix, cmp, 5) < 0)
                 return -1;
-            if (prefix->chunknum)
-                ccnl_free(prefix->chunknum);
-            prefix->chunknum = (int*) ccnl_malloc(sizeof(int));
+            prefix->chunknum = &(prefix->chunknum_buf);
             *prefix->chunknum = chunknum;
         }
         break;
@@ -724,9 +720,7 @@ ccnl_prefix_addChunkNum(struct ccnl_prefix_s *prefix, unsigned int chunknum)
             cmp[4] = chunknum;
             if (ccnl_prefix_appendCmp(prefix, cmp, 5) < 0)
                 return -1;
-            if (prefix->chunknum)
-                ccnl_free(prefix->chunknum);
-            prefix->chunknum = (int*) ccnl_malloc(sizeof(int));
+            prefix->chunknum = &(prefix->chunknum_buf);
             *prefix->chunknum = chunknum;
         }
         break;
