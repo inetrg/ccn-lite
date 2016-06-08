@@ -255,7 +255,7 @@ struct ccnl_content_s {
 };
 
 struct ccnl_pktdetail_ccnb_s {
-    int minsuffix, maxsuffix, aok, scope;
+    int8_t minsuffix, maxsuffix, aok, scope;
     struct ccnl_buf_s *nonce;
     struct ccnl_buf_s *ppkd;        // publisher public key digest
 };
@@ -269,7 +269,7 @@ struct ccnl_pktdetail_iottlv_s {
 };
 
 struct ccnl_pktdetail_ndntlv_s {
-    int minsuffix, maxsuffix, mbf, scope;
+    int8_t minsuffix, maxsuffix, mbf, scope;
     struct ccnl_buf_s *nonce;      // nonce
     struct ccnl_buf_s *ppkl;       // publisher public key locator
 };
