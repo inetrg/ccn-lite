@@ -242,7 +242,7 @@ struct ccnl_pendint_s { // pending interest
 struct ccnl_content_s {
     struct ccnl_content_s *next, *prev;
     struct ccnl_pkt_s *pkt;
-    unsigned short flags;
+    uint8_t flags;
 #define CCNL_CONTENT_FLAGS_STATIC  0x01
 #define CCNL_CONTENT_FLAGS_STALE   0x02
 #define CCNL_CONTENT_FLAGS_USER1   0x40
