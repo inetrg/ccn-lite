@@ -34,14 +34,21 @@ ccnl_fwd_handleContent(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
 {
     struct ccnl_content_s *c;
 
+    int nonce = 0;
+    if (pkt != NULL && (*pkt) != NULL && (*pkt)->s.ndntlv.nonce != NULL) {
+        if ((*pkt)->s.ndntlv.nonce->datalen == 4) {
+            nonce = *((int*)(*pkt)->s.ndntlv.nonce->data);
+        }
+    }
+
     char *s = NULL;
 #ifdef USE_NFN
-    DEBUGMSG_CFWD(INFO, "  incoming data=<%s>%s (nfnflags=%d) from=%s\n",
+    DEBUGMSG_CFWD(INFO, "  incoming data=<%s>%s (nfnflags=%d) nonce=%i from=%s\n",
                   (s = ccnl_prefix_to_path((*pkt)->pfx)),
                   ccnl_suite2str((*pkt)->suite),
-                  (*pkt)->pfx->nfnflags,
+                  (*pkt)->pfx->nfnflags, nonce,
                   ccnl_addr2ascii(from ? &from->peer : NULL));
-    DEBUGMSG_CFWD(INFO, "data %.*s\n", (*pkt)->contlen, (*pkt)->content);
+    DEBUGMSG_CFWD(INFO, "  data %.*s\n", (*pkt)->contlen, (*pkt)->content);
 #else
     DEBUGMSG_CFWD(INFO, "  incoming data=<%s>%s from=%s\n",
                   (s = ccnl_prefix_to_path((*pkt)->pfx)),
@@ -80,29 +87,43 @@ ccnl_fwd_handleContent(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
      // CONFORM: Step 2 (and 3)
 #ifdef USE_NFN
     if (ccnl_nfnprefix_isNFN(c->pkt->pfx)) {
-        if (ccnl_nfn_RX_result(relay, from, c))
-            return 0;
-        DEBUGMSG_CFWD(VERBOSE, "no running computation found \n");
+        if (ccnl_nfnprefix_isKeepalive(c->pkt->pfx)) {
+            ccnl_nfn_RX_keepalive(relay, from, c);
+                // return 0;
+            DEBUGMSG_CFWD(VERBOSE, "no interests to keep alive found \n");
+        } else {
+            if (ccnl_nfn_RX_result(relay, from, c))
+                return 0;
+            DEBUGMSG_CFWD(VERBOSE, "no running computation found \n");
+        }
     }
 #endif
+
     if (!ccnl_content_serve_pending(relay, c)) { // unsolicited content
         // CONFORM: "A node MUST NOT forward unsolicited data [...]"
         DEBUGMSG_CFWD(DEBUG, "  removed because no matching interest\n");
         free_content(c);
         return 0;
     }
-    if (relay->max_cache_entries != 0) { // it's set to -1 or a limit
-        DEBUGMSG_CFWD(DEBUG, "  adding content to cache\n");
-        if (ccnl_content_add2cache(relay, c) == NULL) {
-            DEBUGMSG_CFWD(WARNING, "  adding to cache failed, discard packet\n");
+#ifdef USE_TIMEOUT
+    if (!ccnl_nfnprefix_isKeepalive(c->pkt->pfx)) {
+#endif
+        if (relay->max_cache_entries != 0) { // it's set to -1 or a limit
+            DEBUGMSG_CFWD(DEBUG, "  adding content to cache\n");
+            if (ccnl_content_add2cache(relay, c) == NULL) {
+                DEBUGMSG_CFWD(WARNING, "  adding to cache failed, discard packet\n");
+                free_content(c);
+                return 0;
+            }
+            DEBUGMSG_CFWD(INFO, "data after creating packet %p\n", (void*) c->pkt->content);
+        } else {
+            DEBUGMSG_CFWD(DEBUG, "  content not added to cache\n");
             free_content(c);
-            return 0;
         }
-        DEBUGMSG_CFWD(INFO, "data after creating packet %s\n", c->pkt->content);
-    } else {
-        DEBUGMSG_CFWD(DEBUG, "  content not added to cache\n");
-        free_content(c);
+#ifdef USE_TIMEOUT
     }
+#endif
+
 #ifdef USE_RONR
     /* if we receive a chunk, we assume more chunks of this content may be
      * retrieved along the same path */
@@ -182,7 +203,8 @@ ccnl_fwd_handleInterest(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
 
 #ifdef USE_DUP_CHECK
     if (ccnl_nonce_isDup(relay, *pkt)) {
-        DEBUGMSG_CFWD(DEBUG, "  dropped because of duplicate nonce\n");
+        DEBUGMSG_CFWD(DEBUG, "  dropped because of duplicate nonce %i\n", nonce);
+        
         return 0;
     }
 #endif
@@ -200,13 +222,14 @@ ccnl_fwd_handleInterest(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
     if ((*pkt)->pfx->nfnflags & CCNL_PREFIX_KEEPALIVE) {
         DEBUGMSG_CFWD(DEBUG, "  is a keepalive interest\n");
         if (ccnl_nfn_already_computing(relay, (*pkt)->pfx)) {
-            DEBUGMSG_CFWD(DEBUG, "  found matching computation, reply with 'alive'\n");
+            DEBUGMSG_CFWD(DEBUG, "  running computation found, reply with 'alive'\n");
             unsigned char reply = 200;
             int offset;
             struct ccnl_buf_s *buf  = ccnl_mkSimpleContent((*pkt)->pfx, &reply, 1, &offset);        
             ccnl_face_enqueue(relay, from, buf);    
+            return 0;
         } else {
-            DEBUGMSG_CFWD(DEBUG, "  no running computations found.\n");
+            DEBUGMSG_CFWD(DEBUG, "  no running computation found.\n");
         }
     }
 #endif
@@ -280,7 +303,6 @@ ccnl_fwd_handleInterest(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
         if (ccnl_nfn_RX_request(relay, from, pkt))
             return -1; // this means: everything is ok and pkt was consumed
 #endif
-<<<<<<< HEAD
         if (!ccnl_pkt_fwdOK(*pkt))
             return -1;
         i = ccnl_interest_new(relay, from, pkt);
@@ -292,26 +314,6 @@ ccnl_fwd_handleInterest(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
             DEBUGMSG_CFWD(DEBUG, "  old interest, nevertheless propagated %p\n",
                      (void *) i);
             ccnl_interest_propagate(relay, i);
-=======
-        if (!i) {
-            i = ccnl_interest_new(ccnl, from, CCNL_SUITE_CCNB,
-                                  &buf, &p, minsfx, maxsfx);
-            if (ppkd)
-                i->details.ccnb.ppkd = ppkd, ppkd = NULL;
-            if (i) { // CONFORM: Step 3 (and 4)
-                DEBUGMSG_CFWD(DEBUG, "  created new interest entry %p\n", (void *)i);
-                if (scope > 2)
-                    ccnl_interest_propagate(ccnl, i);
-            }
-        } else if (scope > 2 && (from->flags & CCNL_FACE_FLAGS_FWDALLI)) {
-            DEBUGMSG_CFWD(DEBUG, "  old interest, nevertheless propagated %p\n",
-                     (void *) i);
-            ccnl_interest_propagate(ccnl, i);
-        }
-        if (i) { // store the I request, for the incoming face (Step 3)
-            DEBUGMSG_CFWD(DEBUG, "  appending interest entry %p\n", (void *) i);
-            ccnl_interest_append_pending(i, from);
->>>>>>> origin/arduino
         }
     }
     if (i) { // store the I request, for the incoming face (Step 3)
