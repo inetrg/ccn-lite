@@ -83,10 +83,10 @@ ccnl_fwd_handleContent(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
     // Find the original prefix for the intermediate result and use that prefix to cache the content.
     if (ccnl_nfnprefix_isIntermediate((*pkt)->pfx)) {
         if (ccnl_nfn_RX_intermediate(relay, from, pkt)) {
-            // This was an intermediate result from the compute server. 
+            // This was an intermediate result from the compute server.
             // It was cached, and shouldn't be forwarded.
             DEBUGMSG_CFWD(VERBOSE, "received intermediate result from compute server \n");
-            return 0;   
+            return 0;
         }
     }
 #endif
@@ -206,10 +206,17 @@ ccnl_fwd_handleInterest(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
     struct ccnl_interest_s *i;
     struct ccnl_content_s *c;
 
+    int32_t nonce = 0;
+    if (pkt != NULL && (*pkt) != NULL && (*pkt)->s.ndntlv.nonce != NULL) {
+        if ((*pkt)->s.ndntlv.nonce->datalen == 4) {
+            memcpy(&nonce, (*pkt)->s.ndntlv.nonce->data, 4);
+        }
+    }
+
     char *s = NULL;
-    DEBUGMSG_CFWD(INFO, "  incoming interest=<%s>%s from=%s\n",
+    DEBUGMSG_CFWD(INFO, "  incoming interest=<%s>%s nonce=%i from=%s\n",
                   (s = ccnl_prefix_to_path((*pkt)->pfx)),
-                  ccnl_suite2str((*pkt)->suite),
+                  ccnl_suite2str((*pkt)->suite), nonce,
                   ccnl_addr2ascii(from ? &from->peer : NULL));
     ccnl_free(s);
 
@@ -221,7 +228,7 @@ ccnl_fwd_handleInterest(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
 #ifdef USE_DUP_CHECK
     if (ccnl_nonce_isDup(relay, *pkt)) {
         DEBUGMSG_CFWD(DEBUG, "  dropped because of duplicate nonce %i\n", nonce);
-        
+
         return 0;
     }
 #endif
@@ -245,15 +252,15 @@ ccnl_fwd_handleInterest(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
             char reply[16];
             snprintf(reply, 16, "%d", internum);
             int size = internum >= 0 ? strlen(reply) : 0;
-            struct ccnl_buf_s *buf  = ccnl_mkSimpleContent((*pkt)->pfx, (unsigned char *)reply, size, &offset);        
-            ccnl_face_enqueue(relay, from, buf);    
+            struct ccnl_buf_s *buf  = ccnl_mkSimpleContent((*pkt)->pfx, (unsigned char *)reply, size, &offset);
+            ccnl_face_enqueue(relay, from, buf);
             return 0;
         } else {
             DEBUGMSG_CFWD(DEBUG, "  no running computation found.\n");
         }
     }
 #endif
-    
+
 
     // Step 1: search in content store
     DEBUGMSG_CFWD(DEBUG, "  searching in CS\n");
