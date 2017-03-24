@@ -62,10 +62,12 @@ ccnl_fwd_handleContent(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
 #endif
     ccnl_free(s);
 
+#ifdef RIOT_VERSION
     if (local_consumer(relay, from, *pkt)) {
         *pkt = NULL;
         return 0;
     }
+#endif
 
 #if defined(USE_SUITE_CCNB) && defined(USE_SIGNATURES)
 //  FIXME: mgmt messages for NDN and other suites?
