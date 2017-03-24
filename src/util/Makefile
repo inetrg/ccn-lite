@@ -19,8 +19,6 @@ PROGS=	ccn-lite-ccnb2xml \
 	ccn-lite-rpc \
 	ccn-lite-simplenfn \
 	ccn-lite-valid
-#	ccn-lite-peekcomputation \
-#	ccn-lite-deF \
 
 CCNB_LIB =   ../ccnl-pkt-ccnb.h ../ccnl-pkt-ccnb.c ../lib-sha256.c
 CCNTLV_LIB = ../ccnl-pkt-ccntlv.h ../ccnl-pkt-ccntlv.c
@@ -33,10 +31,6 @@ SUITE_LIBS = ${CCNB_LIB} ${CCNTLV_LIB} ${LOCALRPC_LIB} ${NDNTLV_LIB}
 
 
 CCNL_CORE_LIB = ../ccnl-defs.h ../ccnl-core.h ../ccnl-core.c
-
-# CCNL_RELAY_LIB = ../ccn-lite-relay.c ${SUITE_LIBS} \
-#                  ${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB} \
-#                  ../ccnl-ext-mgmt.c ../ccnl-ext-http.c ../ccnl-ext-crypto.c
 
 CCNL_PLATFORM_LIB = ../ccnl-includes.h \
                     ../ccnl-ext-debug.c ../ccnl-ext.h ../ccnl-platform.c  \
@@ -113,10 +107,6 @@ ccn-lite-mkF: Makefile ccn-lite-mkF.c ${CCNB_LIB} ${CCNB_LIB} ${CCNTLV_LIB} ${ND
 ccn-lite-mkI: Makefile ccn-lite-mkI.c ${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} ../ccnl-defs.h
 	$(CC) $(CFLAGS) ccn-lite-mkI.c -o $@
 	@${CREATE_BIN}
-
-#ccn-lite-peekcomputation: Makefile ccn-lite-peekcomputation.c ${CCNB_LIB} ../ccnl.h  ccnl-common.c
-#	$(CC) $(CFLAGS) ccn-lite-peekcomputation.c -o $@
-#	@${CREATE_BIN}
 
 ccn-lite-cryptoserver: Makefile ccn-lite-cryptoserver.c
 	$(CC) $(CFLAGS) ccn-lite-cryptoserver.c -o $@ ${EXTLIBS}

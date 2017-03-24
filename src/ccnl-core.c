@@ -541,7 +541,6 @@ ccnl_interest_propagate(struct ccnl_relay_s *ccnl, struct ccnl_interest_s *i)
             ccnl_free(s);
             ccnl_nfn_monitor(ccnl, fwd->face, i->pkt->pfx, NULL, 0);
 
-            // DEBUGMSG(DEBUG, "%p %p %p\n", (void*)i, (void*)i->pkt, (void*)i->pkt->buf);
             if (fwd->tap)
                 (fwd->tap)(ccnl, i->from, i->pkt->pfx, i->pkt->buf);
             if (fwd->face)
@@ -638,18 +637,8 @@ ccnl_interest_remove(struct ccnl_relay_s *ccnl, struct ccnl_interest_s *i)
 {
     struct ccnl_interest_s *i2;
 
-/*
-    if (!i)
-        return NULL;
-*/
     DEBUGMSG_CORE(TRACE, "ccnl_interest_remove %p\n", (void *) i);
 
-/*
-#ifdef USE_NFN
-    if (!(i->flags & CCNL_PIT_COREPROPAGATES))
-        return i->next;
-#endif
-*/
     while (i->pending) {
         struct ccnl_pendint_s *tmp = i->pending->next;          \
         ccnl_free(i->pending);
@@ -737,13 +726,11 @@ ccnl_content_remove(struct ccnl_relay_s *ccnl, struct ccnl_content_s *c)
     c2 = c->next;
     DBL_LINKED_LIST_REMOVE(ccnl->contents, c);
 
-//    free_content(c);
     if (c->pkt) {
         free_prefix(c->pkt->pfx);
         ccnl_free(c->pkt->buf);
         ccnl_free(c->pkt);
     }
-    //    free_prefix(c->name);
     ccnl_free(c);
 
     ccnl->contentcnt--;
@@ -830,12 +817,6 @@ ccnl_content_serve_pending(struct ccnl_relay_s *ccnl, struct ccnl_content_s *c)
     struct ccnl_face_s *f;
     int cnt = 0;
     DEBUGMSG_CORE(TRACE, "ccnl_content_serve_pending\n");
-
-// #ifdef USE_TIMEOUT_KEEPALIVE
-//     if (ccnl_nfnprefix_isIntermediate(c->pkt->pfx)) {
-//         return 1;   // don't forward incoming intermediate content, just cache
-//     }
-// #endif
 
     for (f = ccnl->faces; f; f = f->next){
                 f->flags &= ~CCNL_FACE_FLAGS_SERVED; // reply on a face only once
@@ -1031,13 +1012,6 @@ ccnl_do_ageing(void *ptr, void *dummy)
                     ccnl_nfn_interest_remove(relay, origin);
                     i = ccnl_nfn_interest_remove(relay, i);
                 }
-// #elif defined USE_TIMEOUT_KEEPCONTENT
-//                 if (ccnl_nfn_already_computing(relay, i->pkt->pfx)) {
-//                     DEBUGMSG_AGEING("AGING: RESET INTEREST RETRIES", "timeout: already computing");
-//                     i->last_used = CCNL_NOW();
-//                     i->retries = 0;
-//                 }
-//                 i = i->next;
 #else // USE_TIMEOUT
                 DEBUGMSG_AGEING("AGING: REMOVE INTEREST", "timeout: remove interest");
                 i = ccnl_nfn_interest_remove(relay, i);
@@ -1147,7 +1121,6 @@ ccnl_core_RX(struct ccnl_relay_s *relay, int ifndx, unsigned char *data,
     (void) base; // silence compiler warning (if USE_DEBUG is not set)
 
     DEBUGMSG_CORE(DEBUG, "ccnl_core_RX ifndx=%d, %d bytes\n", ifndx, datalen);
-    //    DEBUGMSG_ON(DEBUG, "ccnl_core_RX ifndx=%d, %d bytes\n", ifndx, datalen);
 
 #ifdef USE_STATS
     if (ifndx >= 0)
@@ -1176,7 +1149,6 @@ ccnl_core_RX(struct ccnl_relay_s *relay, int ifndx, unsigned char *data,
                      ifndx, datalen, *data, data - base);
             return;
         }
-        //        dispatch = ccnl_core_RX_dispatch[suite];
         dispatch = ccnl_core_suites[suite].RX;
         if (!dispatch) {
             DEBUGMSG_CORE(ERROR, "Forwarder not initialized or dispatcher "

@@ -46,8 +46,7 @@ NFN_TIMEOUT_KEEPALIVE_FLAGS += -DUSE_TIMEOUT_KEEPALIVE
 NFN_TIMEOUT_KEEPCONTENT_FLAGS += -DUSE_TIMEOUT_KEEPCONTENT
 
 PROGS =
-INST_PROGS= ccn-lite-relay \
-#            ccn-lite-minimalrelay
+INST_PROGS= ccn-lite-relay
 
 # Linux specific (adds kernel module)
 ifeq ($(uname_S),Linux)
@@ -123,7 +122,6 @@ ifeq ($(GCC_GTEQ_40900),1)
     EXTRA_CFLAGS += -Wno-date-time
 endif
 obj-m += ccn-lite-lnxkernel.o
-#ccn-lite-lnxkernel-objs += ccnl-ext-crypto.o
 
 CCNB_LIB =   ccnl-pkt-ccnb.h ccnl-pkt-ccnb.c lib-sha256.c
 CCNTLV_LIB = ccnl-pkt-ccntlv.h ccnl-pkt-ccntlv.c
@@ -194,11 +192,6 @@ ccn-lite-relay-nack: ${CCNL_RELAY_LIB}
 	${CC} -o $@ ${CCNLCFLAGS} ${NACKFLAGS} $< ${EXTLIBS}
 	@${CREATE_BIN}
 
-# ccn-lite-simplenfn-keepalive: ccn-lite-simplenfn-keepalive.c \
-# 	${CCNL_RELAY_LIB}
-# 	${CC} -o $@ ${CCNLCFLAGS} $< ${EXTLIBS}
-# 	@${CREATE_BIN}
-
 ccn-lite-simu: ccn-lite-simu.c  ${SUITE_LIBS} \
 	${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB} \
 	ccnl-simu-client.c
@@ -217,7 +210,6 @@ ccn-lite-omnet:  ${OMNET_DEPS}
 
 ccn-lite-lnxkernel:
 	$(MAKE) modules
-#   rm -rf $@.o $@.mod.* .$@* .tmp_versions modules.order Module.symvers
 
 modules: ccn-lite-lnxkernel.c  ${SUITE_LIBS} \
     ${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB} ccnl-ext-crypto.c

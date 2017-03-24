@@ -21,7 +21,6 @@
  */
 
 #ifdef USE_TIMEOUT_KEEPALIVE
-// #include "ccnl-ext-nfn.c"
 int ccnl_nfn_already_computing(struct ccnl_relay_s *ccnl, struct ccnl_prefix_s *prefix);
 int ccnl_nfn_RX_intermediate(struct ccnl_relay_s *relay, struct ccnl_face_s *from, struct ccnl_pkt_s **pkt);
 int ccnl_nfn_intermediate_num(struct ccnl_relay_s *relay, struct ccnl_prefix_s *prefix);
@@ -329,31 +328,6 @@ ccnl_fwd_handleInterest(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
         ccnl_interest_append_pending(i, from);
         ccnl_interest_propagate(relay, i);
     }
-
-    /*
-    if (!i) { // this is a new/unknown I request: create and propagate
-#ifdef USE_NFN
-        if (ccnl_nfn_RX_request(relay, from, pkt))
-            return -1; // this means: everything is ok and pkt was consumed
-#endif
-        if (!ccnl_pkt_fwdOK(*pkt))
-            return -1;
-        i = ccnl_interest_new(relay, from, pkt);
-        DEBUGMSG_CFWD(DEBUG,
-            "  created new interest entry %p\n", (void *) i);
-        ccnl_interest_propagate(relay, i);
-    } else {
-        if (ccnl_pkt_fwdOK(*pkt) && (from->flags & CCNL_FACE_FLAGS_FWDALLI)) {
-            DEBUGMSG_CFWD(DEBUG, "  old interest, nevertheless propagated %p\n",
-                     (void *) i);
-            ccnl_interest_propagate(relay, i);
-        }
-    }
-    if (i) { // store the I request, for the incoming face (Step 3)
-        DEBUGMSG_CFWD(DEBUG, "  appending interest entry %p\n", (void *) i);
-        ccnl_interest_append_pending(i, from);
-    }
-    */
     return 0;
 }
 
@@ -536,14 +510,12 @@ ccnl_ccntlv_forwarder(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
     }
     if (!from) {
         DEBUGMSG_CFWD(TRACE, "  pkt ok\n");
-//        goto Done;
     }
 
 
     if (hp->pkttype == CCNX_PT_Interest) {
         if (pkt->type == CCNX_TLV_TL_Interest) {
             pkt->flags |= CCNL_PKT_REQUEST;
-            // DEBUGMSG_CFWD(DEBUG, "  interest=<%s>\n", ccnl_prefix_to_path(pkt->pfx));
             if (ccnl_fwd_handleInterest(relay, from, &pkt, ccnl_ccntlv_cMatch))
                 goto Done;
         } else {
@@ -625,7 +597,6 @@ ccnl_cistlv_forwarder(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
     if (hp->pkttype == CISCO_PT_Interest) {
         if (pkt->type == CISCO_TLV_Interest) {
             pkt->flags |= CCNL_PKT_REQUEST;
-            //            DEBUGMSG_CFWD(DEBUG, "  interest=<%s>\n", ccnl_prefix_to_path(pkt->pfx));
             if (ccnl_fwd_handleInterest(relay, from, &pkt, ccnl_cistlv_cMatch))
                 goto Done;
         } else {
@@ -669,13 +640,6 @@ ccnl_iottlv_forwarder(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
              *datalen, (void*)from, relay->id, from ? from->faceid : -1);
 
     while (!ccnl_switch_dehead(data, datalen, &enc));
-/*
-        suite = ccnl_enc2suite(enc);
-    if (suite != CCNL_SUITE_IOTTLV) {
-        DEBUGMSG_CFWD(TRACE, "  wrong encoding? (%d)\n", enc);
-        return -1;
-    }
-*/
     DEBUGMSG_CFWD(TRACE, "  datalen now %d\n", *datalen);
 
     if (ccnl_iottlv_dehead(data, datalen, &typ, &len))
