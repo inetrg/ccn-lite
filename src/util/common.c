@@ -60,13 +60,13 @@
 
 #include "base64.c"
 
-#include "../ccnl-os-includes.h"
-#include "../ccnl-defs.h"
-#include "../ccnl-core.h"
-#include "../ccnl-ext.h"
-#include "../ccnl-ext-debug.c"
+#include "ccnl-os-includes.h"
+#include "ccnl-defs.h"
+#include "ccnl-core.h"
+#include "ccnl-ext.h"
+#include "../ext/debug.c"
 #include "../ccnl-os-time.c"
-#include "../ccnl-ext-logging.c"
+#include "../ext/logging.c"
 
 int debug_level = WARNING;
 
@@ -81,23 +81,23 @@ int debug_level = WARNING;
 struct ccnl_prefix_s* ccnl_prefix_new(int suite, int cnt);
 int ccnl_pkt_prependComponent(int suite, char *src, int *offset, unsigned char *buf);
 
-#include "../ccnl-pkt-switch.c"
-#include "../ccnl-pkt-ccnb.c"
-#include "../ccnl-pkt-ccntlv.c"
-#include "../ccnl-pkt-cistlv.c"
-#include "../ccnl-pkt-iottlv.c"
-#include "../ccnl-pkt-ndntlv.c"
-#include "../ccnl-pkt-localrpc.c"
+#include "../pkt-formats/switch.c"
+#include "../pkt-formats/ccnb.c"
+#include "../pkt-formats/ccntlv.c"
+#include "../pkt-formats/cistlv.c"
+#include "../pkt-formats/iottlv.c"
+#include "../pkt-formats/ndntlv.c"
+#include "../pkt-formats/localrpc.c"
 
 #define ccnl_core_addToCleanup(b)       do{}while(0)
 
 // include only the utils, not the core routines:
-#include "../ccnl-ext.h"
-#include "../ccnl-core-util.c"
+#include "ccnl-ext.h"
+#include "../core/util.c"
 #ifdef USE_FRAG
-#include "../ccnl-ext-frag.c"
+#include "../ext/frag.c"
 #endif
-#include "../ccnl-ext-hmac.c"
+#include "../ext/hmac.c"
 
 #else // CCNL_UAPI_H_ is defined
 

@@ -29,8 +29,8 @@
 #define USE_SUITE_NDNTLV
 
 #define USE_SIGNATURES
-#include "ccnl-common.c"
-#include "ccnl-crypto.c"
+#include "common.c"
+#include "crypto.c"
 
 // ----------------------------------------------------------------------
 

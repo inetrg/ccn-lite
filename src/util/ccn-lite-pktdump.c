@@ -33,7 +33,7 @@
 
 #define NEEDS_PACKET_CRAFTING // for IOTTLV
 
-#include "ccnl-common.c"
+#include "common.c"
 
 // ----------------------------------------------------------------------
 

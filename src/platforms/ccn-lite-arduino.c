@@ -207,9 +207,9 @@ inet_ntoa(struct in_addr a)
     return logstr;
 }
 
-#include "ccnl-ext-debug.c"
-#include "ccnl-os-time.c"
-#include "ccnl-ext-logging.c"
+#include "../ext/debug.c"
+#include "../ccnl-os-time.c"
+#include "../ext/logging.c"
 
 #define ccnl_app_RX(x,y)                do{}while(0)
 #define ccnl_print_stats(x,y)           do{}while(0)
@@ -235,19 +235,9 @@ int local_producer(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
                    struct ccnl_pkt_s *pkt);
 
 #include "Time.h"
-#include "ccnl-core.c"
-#include "ccnl-ext-hmac.c"
-#include "ccnl-ext-http.c"
-
-/*
-#include "ccnl-ext-localrpc.c"
-#include "ccnl-ext-mgmt.c"
-#include "ccnl-ext-nfn.c"
-#include "ccnl-ext-nfnmonitor.c"
-#include "ccnl-ext-sched.c"
-#include "ccnl-ext-crypto.c"
-*/
-//#include "ccnl-ext-frag.c"
+#include "../core/core.c"
+#include "../ext/hmac.c"
+#include "../ext/http.c"
 
 // ----------------------------------------------------------------------
 

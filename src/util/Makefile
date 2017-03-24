@@ -1,7 +1,8 @@
 # ccnl/util/Makefile
 
 CC?=gcc
-CFLAGS=-Wall -g -DUSE_UTIL -Wno-error=deprecated-declarations -std=c99 -Werror
+INCLUDES += ../include
+CFLAGS=-Wall -g -DUSE_UTIL -Wno-error=deprecated-declarations -std=c99 -Werror -I${INCLUDES}
 EXTLIBS=-lcrypto
 CREATE_BIN=mkdir -p ../../bin && cd ../../bin && ln -f -s ../src/util/$@ $@
 
@@ -20,25 +21,25 @@ PROGS=	ccn-lite-ccnb2xml \
 	ccn-lite-simplenfn \
 	ccn-lite-valid
 
-CCNB_LIB =   ../ccnl-pkt-ccnb.h ../ccnl-pkt-ccnb.c ../lib-sha256.c
-CCNTLV_LIB = ../ccnl-pkt-ccntlv.h ../ccnl-pkt-ccntlv.c
-CISTLV_LIB = ../ccnl-pkt-cisntlv.h ../ccnl-pkt-cistlv.c
-IOTTLV_LIB = ../ccnl-pkt-iottlv.h ../ccnl-pkt-iottlv.c
-LOCALRPC_LIB = ../ccnl-pkt-localrpc.h ../ccnl-pkt-localrpc.c ../ccnl-ext-localrpc.c
-NDNTLV_LIB = ../ccnl-pkt-ndntlv.h ../ccnl-pkt-ndntlv.c
+CCNB_LIB =   ../include/ccnl-pkt-ccnb.h ../pkt-formats/ccnb.c ../lib-sha256.c
+CCNTLV_LIB = ../include/ccnl-pkt-ccntlv.h ../pkt-formats/ccntlv.c
+CISTLV_LIB = ../include/ccnl-pkt-cisntlv.h ../pkt-formats/cistlv.c
+IOTTLV_LIB = ../include/ccnl-pkt-iottlv.h ../pkt-formats/iottlv.c
+LOCALRPC_LIB = ../include/ccnl-pkt-localrpc.h ../pkt-formats/localrpc.c ../ext/localrpc.c
+NDNTLV_LIB = ../include/ccnl-pkt-ndntlv.h ../pkt-formats/ndntlv.c
 
 SUITE_LIBS = ${CCNB_LIB} ${CCNTLV_LIB} ${LOCALRPC_LIB} ${NDNTLV_LIB}
 
 
-CCNL_CORE_LIB = ../ccnl-defs.h ../ccnl-core.h ../ccnl-core.c
+CCNL_CORE_LIB = ../include/ccnl-defs.h ../include/ccnl-core.h ../core/core.c
 
-CCNL_PLATFORM_LIB = ../ccnl-includes.h \
-                    ../ccnl-ext-debug.c ../ccnl-ext.h ../ccnl-platform.c  \
-                    ../ccnl-ext-frag.c ../ccnl-ext-sched.c ../ccnl-ext-hmac.c \
-                    ../ccnl-ext-logging.c
+CCNL_PLATFORM_LIB = ../include/ccnl-includes.h \
+                    ../ext/debug.c ../include/ccnl-ext.h ../ccnl-platform.c  \
+                    ../ext/frag.c ../ext/sched.c ../ext/hmac.c \
+                    ../ext/logging.c
 
 
-NFN_LIB = ccnl-ext-nfn.c krivine.c krivine-common.c
+NFN_LIB = ../ext/nfn.c krivine.c krivine-common.c
 
 # CCNL_NFN_MONITOR to log messages to nfn-scala montior
 NFNFLAGS += -DUSE_NFN -DUSE_NFN_MONITOR
@@ -54,24 +55,24 @@ endif
 all: $(PROGS)
 
 ccn-lite-ccnb2xml: Makefile ccn-lite-ccnb2xml.c \
-		${CCNB_LIB} ../ccnl-defs.h ccnl-common.c
+		${CCNB_LIB} ../include/ccnl-defs.h common.c
 	$(CC) $(CFLAGS) ccn-lite-ccnb2xml.c -o $@ ${EXTLIBS}
 	@${CREATE_BIN}
 
 ccn-lite-ctrl: Makefile ccn-lite-ctrl.c ${CCNB_LIB} \
-		../ccnl-defs.h ccnl-common.c
+		../include/ccnl-defs.h common.c
 	$(CC) $(CFLAGS) ccn-lite-ctrl.c -o $@ ${EXTLIBS}
 	@${CREATE_BIN}
 
 ccn-lite-peek: Makefile ccn-lite-peek.c \
 		${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} \
-		../ccnl-defs.h ../ccnl-core-util.c
+		../include/ccnl-defs.h ../core/util.c
 	$(CC) $(CFLAGS) ccn-lite-peek.c -o $@
 	@${CREATE_BIN}
 
 ccn-lite-fetch: Makefile ccn-lite-fetch.c \
 		${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} \
-		../ccnl-defs.h ../ccnl-core-util.c ccnl-common.c
+		../include/ccnl-defs.h ../core/util.c common.c
 	$(CC) $(CFLAGS) ccn-lite-fetch.c -o $@
 	@${CREATE_BIN}
 
@@ -83,28 +84,28 @@ ccn-lite-pktdump: Makefile ccn-lite-pktdump.c \
 
 ccn-lite-simplenfn: Makefile ccn-lite-simplenfn.c \
 		${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} \
-		../ccnl-defs.h ../ccnl-core-util.c
+		../include/ccnl-defs.h ../core/util.c
 	$(CC) $(CFLAGS) ccn-lite-simplenfn.c -o $@
 	@${CREATE_BIN}
 
 ccn-lite-rpc: Makefile ccn-lite-rpc.c \
-		${NDNTLV_LIB} ${LOCALRPC_LIB} ../ccnl-defs.h ccnl-common.c
+		${NDNTLV_LIB} ${LOCALRPC_LIB} ../include/ccnl-defs.h common.c
 	$(CC) $(CFLAGS) ccn-lite-rpc.c -o $@
 	@${CREATE_BIN}
 
-ccn-lite-deF: Makefile ccn-lite-deF.c ${CCNB_LIB} ../ccnl-defs.h ccnl-frag.h
+ccn-lite-deF: Makefile ccn-lite-deF.c ${CCNB_LIB} ../include/ccnl-defs.h ccnl-frag.h
 	$(CC) $(CFLAGS) ccn-lite-deF.c -o $@
 	@${CREATE_BIN}
 
-ccn-lite-mkC: Makefile ccn-lite-mkC.c ${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} ../ccnl-defs.h
+ccn-lite-mkC: Makefile ccn-lite-mkC.c ${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} ../include/ccnl-defs.h
 	$(CC) $(CFLAGS) ccn-lite-mkC.c -o $@ ${EXTLIBS}
 	@${CREATE_BIN}
 
-ccn-lite-mkF: Makefile ccn-lite-mkF.c ${CCNB_LIB} ${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} ../ccnl-defs.h
+ccn-lite-mkF: Makefile ccn-lite-mkF.c ${CCNB_LIB} ${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} ../include/ccnl-defs.h
 	$(CC) $(CFLAGS) ccn-lite-mkF.c -o $@
 	@${CREATE_BIN}
 
-ccn-lite-mkI: Makefile ccn-lite-mkI.c ${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} ../ccnl-defs.h
+ccn-lite-mkI: Makefile ccn-lite-mkI.c ${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} ../include/ccnl-defs.h
 	$(CC) $(CFLAGS) ccn-lite-mkI.c -o $@
 	@${CREATE_BIN}
 
@@ -112,13 +113,13 @@ ccn-lite-cryptoserver: Makefile ccn-lite-cryptoserver.c
 	$(CC) $(CFLAGS) ccn-lite-cryptoserver.c -o $@ ${EXTLIBS}
 	@${CREATE_BIN}
 
-ccn-lite-produce: Makefile ccn-lite-produce.c ${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} ../ccnl-defs.h
+ccn-lite-produce: Makefile ccn-lite-produce.c ${CCNB_LIB} ${CCNTLV_LIB} ${NDNTLV_LIB} ../include/ccnl-defs.h
 	$(CC) $(CFLAGS) ccn-lite-produce.c -o $@ ${EXTLIBS}
 	@${CREATE_BIN}
 
-ccn-lite-valid: Makefile ccn-lite-valid.c ccnl-common.c \
+ccn-lite-valid: Makefile ccn-lite-valid.c common.c \
 		${CCNTLV_LIB} ${NDNTLV_LIB} \
-		../ccnl-defs.h ../ccnl-core-util.c
+		../include/ccnl-defs.h ../core/util.c
 	$(CC) $(CFLAGS) ccn-lite-valid.c -o $@
 	@${CREATE_BIN}
 

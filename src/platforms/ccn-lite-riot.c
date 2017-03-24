@@ -40,7 +40,7 @@
 #include "net/packet.h"
 #include "ccn-lite-riot.h"
 
-#include "ccnl-os-time.c"
+#include "../ccnl-os-time.c"
 
 /**
  * @brief Some macro definitions
@@ -198,7 +198,7 @@ ccnl_ll_TX(struct ccnl_relay_s *ccnl, struct ccnl_if_s *ifc,
  */
 int ccnl_app_RX(struct ccnl_relay_s *ccnl, struct ccnl_content_s *c);
 
-#include "ccnl-core.c"
+#include "../core/core.c"
 
 /**
  * @brief netreg entry for CCN-Lite packets

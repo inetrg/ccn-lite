@@ -5,7 +5,7 @@
 
 int jni_bleSend(unsigned char *data, int len);
 
-#include "../../ccn-lite-android.c"
+#include "../../platforms/ccn-lite-android.c"
 
 static JavaVM *jvm;
 static jclass ccnLiteClass;

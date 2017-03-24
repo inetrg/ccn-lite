@@ -282,7 +282,7 @@ ccnl_run_events()
 int debug_level;
 struct ccnl_relay_s theRelay;
 
-#include "ccnl-core.c"
+#include "../core/core.c"
 
 // ----------------------------------------------------------------------
 // UDP socket, main event loop

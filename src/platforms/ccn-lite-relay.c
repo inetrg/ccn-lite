@@ -66,26 +66,26 @@
 #include "ccnl-core.h"
 
 #include "ccnl-ext.h"
-#include "ccnl-ext-debug.c"
-#include "ccnl-os-time.c"
-#include "ccnl-ext-logging.c"
+#include "../ext/debug.c"
+#include "../ccnl-os-time.c"
+#include "../ext/logging.c"
 
 #define ccnl_app_RX(x,y)                do{}while(0)
 #define local_producer(...)             0
 #define cache_strategy_remove(...)      0
 
-#include "ccnl-core.c"
+#include "../core/core.c"
 
-#include "ccnl-ext-echo.c"
-#include "ccnl-ext-hmac.c"
-#include "ccnl-ext-http.c"
-#include "ccnl-ext-localrpc.c"
-#include "ccnl-ext-mgmt.c"
-#include "ccnl-ext-nfn.c"
-#include "ccnl-ext-nfnmonitor.c"
-#include "ccnl-ext-sched.c"
-#include "ccnl-ext-frag.c"
-#include "ccnl-ext-crypto.c"
+#include "../ext/echo.c"
+#include "../ext/hmac.c"
+#include "../ext/http.c"
+#include "../ext/localrpc.c"
+#include "../ext/mgmt.c"
+#include "../ext/nfn.c"
+#include "../ext/nfnmonitor.c"
+#include "../ext/sched.c"
+#include "../ext/frag.c"
+#include "../ext/crypto.c"
 
 // ----------------------------------------------------------------------
 

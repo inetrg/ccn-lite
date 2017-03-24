@@ -18,8 +18,11 @@ CC?=gcc
 GCC_VERSION := $(shell ${CC} -dumpversion | sed -e 's/\.\([0-9][0-9]\)/\1/g' -e 's/\.\([0-9]\)/0\1/g' -e 's/^[0-9]\{3,4\}$$/&00/')
 GCC_GTEQ_40900 := $(shell expr ${GCC_VERSION} \>= 40900)
 
+# include path
+INCLUDES += -Iinclude
+
 # general flags used on both linux and OSX
-CCNLCFLAGS=-Wall -Werror -std=c99 -g
+CCNLCFLAGS=-Wall -Werror -std=c99 -g ${INCLUDES}
 
 ifeq ($(RIOTBASE),)
 	CCNLCFLAGS += -pedantic -O0
@@ -123,55 +126,54 @@ ifeq ($(GCC_GTEQ_40900),1)
 endif
 obj-m += ccn-lite-lnxkernel.o
 
-CCNB_LIB =   ccnl-pkt-ccnb.h ccnl-pkt-ccnb.c lib-sha256.c
-CCNTLV_LIB = ccnl-pkt-ccntlv.h ccnl-pkt-ccntlv.c
-CISTLV_LIB = ccnl-pkt-cistlv.h ccnl-pkt-cistlv.c
-IOTTLV_LIB = ccnl-pkt-iottlv.h ccnl-pkt-iottlv.c
-NDNTLV_LIB = ccnl-pkt-ndntlv.h ccnl-pkt-ndntlv.c
-LOCALRPC_LIB = ccnl-pkt-localrpc.h ccnl-pkt-localrpc.c ccnl-ext-localrpc.c
+CCNB_LIB =   include/ccnl-pkt-ccnb.h pkt-formats/ccnb.c lib-sha256.c
+CCNTLV_LIB = include/ccnl-pkt-ccntlv.h pkt-formats/ccntlv.c
+CISTLV_LIB = include/ccnl-pkt-cistlv.h pkt-formats/cistlv.c
+IOTTLV_LIB = include/ccnl-pkt-iottlv.h pkt-formats/iottlv.c
+NDNTLV_LIB = include/ccnl-pkt-ndntlv.h pkt-formats/ndntlv.c
+LOCALRPC_LIB = include/ccnl-pkt-localrpc.h pkt-formats/localrpc.c ext/localrpc.c
 SUITE_LIBS = ${CCNB_LIB} ${CCNTLV_LIB} ${CISTLV_LIB} ${IOTTLV_LIB} ${NDNTLV_LIB} ${LOCALRPC_LIB}
-UTIL_LIB := util/base64.o util/ccnl-common.o
+UTIL_LIB := util/base64.o util/common.o
 
 
-CCNL_CORE_LIB = ccnl-defs.h ccnl-core.h ccnl-core.c ccnl-core-fwd.c ccnl-core-util.c
+CCNL_CORE_LIB = include/ccnl-defs.h include/ccnl-core.h core/core.c core/fwd.c core/util.c
 
-CCNL_RELAY_LIB = ccn-lite-relay.c ${SUITE_LIBS} \
+CCNL_RELAY_LIB = platforms/ccn-lite-relay.c ${SUITE_LIBS} \
                  ${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB} \
-                 ccnl-ext-echo.c ccnl-ext-hmac.c ccnl-ext-mgmt.c \
-		 ccnl-ext-http.c  ccnl-ext-crypto.c
+				 ext/echo.c ext/hmac.c ext/mgmt.c ext/http.c  ext/crypto.c
 
-CCNL_PLATFORM_LIB = ccnl-os-includes.h \
-                    ccnl-ext-debug.c ccnl-ext.h ccnl-ext-logging.c \
-                    ccnl-os-time.c ccnl-ext-frag.c ccnl-ext-sched.c
+CCNL_PLATFORM_LIB = include/ccnl-os-includes.h \
+                    ext/debug.c include/ccnl-ext.h ext/logging.c \
+                    ccnl-os-time.c ext/frag.c ext/sched.c
 
-NFN_LIB = ccnl-ext-nfn.c krivine.c krivine-common.c
+NFN_LIB = ext/nfn.c krivine.c krivine-common.c
 
-OMNET_DEPS = ccnl-core.c ccnl-core-fwd.c ccnl-core.h ccnl-core-util.c ccnl-defs.h \
-             ccnl-ext-crypto.c ccnl-ext-debug.c ccnl-ext-debug.h ccnl-ext-echo.c \
-             ccnl-ext-frag.c ccnl-ext.h ccnl-ext-hmac.c ccnl-ext-http.c \
-             ccnl-ext-localrpc.c ccnl-ext-logging.c ccnl-ext-mgmt.c ccnl-ext-sched.c \
-             ccnl-pkt-ccnb.c ccnl-pkt-ccnb.h ccnl-pkt-ccntlv.c ccnl-pkt-ccntlv.h \
-             ccnl-pkt-cistlv.c ccnl-pkt-cistlv.h ccnl-pkt-iottlv.c ccnl-pkt-iottlv.h \
-             ccnl-pkt-localrpc.c ccnl-pkt-localrpc.h ccnl-pkt-ndntlv.c ccnl-pkt-ndntlv.h \
-             ccnl-pkt-switch.c ccnl-uapi.c ccnl-uapi.h lib-sha256.c \
-             util/base64.c util/ccnl-common.c \
+OMNET_DEPS = core/core.c core/fwd.c include/ccnl-core.h core/util.c include/ccnl-defs.h \
+             ext/crypto.c ext/debug.c include/debug.h ext/echo.c \
+             ext/frag.c include/ccnl-ext.h ext/hmac.c ext/http.c \
+             ext/localrpc.c ext/logging.c ext/mgmt.c ext/sched.c \
+             pkt-formats/ccnb.c include/ccnb.h pkt-formats/ccntlv.c include/ccntlv.h \
+             pkt-formats/cistlv.c include/cistlv.h pkt-formats/iottlv.c include/iottlv.h \
+             pkt-formats/localrpc.c include/localrpc.h pkt-formats/ndntlv.c include/ndntlv.h \
+             pkt-formats/switch.c ccnl-uapi.c include/ccnl-uapi.h lib-sha256.c \
+             util/base64.c util/common.c
 
 # ----------------------------------------------------------------------
 
 all: ${PROGS}
 	$(MAKE) -C util
 
-lib-ccn-lite.a: ccn-lite-riot.c \
+lib-ccn-lite.a: platforms/ccn-lite-riot.c \
 	${SUITE_LIBS} ${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB}
 	${CC} -o $@ ${RIOT_CFLAGS} ${CCNLCFLAGS} -c $<
 
-lib-ccn-lite-utils.a: ${UTIL_LIB} util/base64.c util/ccnl-common.c
+lib-ccn-lite-utils.a: ${UTIL_LIB} util/base64.c util/common.c
 	${AR} rcs $@ ${UTIL_LIB}
 
 $(UTIL_LIB): %.o: %.c
 	${CC} -o $@ ${RIOT_CFLAGS} ${CCNLCFLAGS} -c $<
 
-ccn-lite-minimalrelay: ccn-lite-minimalrelay.c \
+ccn-lite-minimalrelay: platforms/ccn-lite-minimalrelay.c \
 	${SUITE_LIBS} ${CCNL_CORE_LIB}
 	${CC} -o $@ ${CCNLCFLAGS} $<
 	@${CREATE_BIN}
@@ -192,7 +194,7 @@ ccn-lite-relay-nack: ${CCNL_RELAY_LIB}
 	${CC} -o $@ ${CCNLCFLAGS} ${NACKFLAGS} $< ${EXTLIBS}
 	@${CREATE_BIN}
 
-ccn-lite-simu: ccn-lite-simu.c  ${SUITE_LIBS} \
+ccn-lite-simu: platforms/ccn-lite-simu.c  ${SUITE_LIBS} \
 	${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB} \
 	ccnl-simu-client.c
 	${EXTMAKE}
@@ -211,8 +213,8 @@ ccn-lite-omnet:  ${OMNET_DEPS}
 ccn-lite-lnxkernel:
 	$(MAKE) modules
 
-modules: ccn-lite-lnxkernel.c  ${SUITE_LIBS} \
-    ${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB} ccnl-ext-crypto.c
+modules: platforms/ccn-lite-lnxkernel.c  ${SUITE_LIBS} \
+    ${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB} ext/crypto.c
 	$(MAKE) -C /lib/modules/`uname -r`/build M=`pwd` V=1 modules
 
 datastruct.pdf: datastruct.dot

@@ -590,8 +590,8 @@ static inline int           setMgmt (struct info_mgmt_s *m) {return m->vtable->s
 
 
 #include "ccnl-ext.h"
-#include "ccnl-ext-debug.c"
-#include "ccnl-ext-logging.c"
+#include "../ext/debug.c"
+#include "../ext/logging.c"
 #define local_producer(...)             0
 #define cache_strategy_remove(...)      0
 
@@ -656,16 +656,16 @@ static inline int           setMgmt (struct info_mgmt_s *m) {return m->vtable->s
 #define NEEDS_PACKET_CRAFTING
 //#define USE_HMAC256           // this seems to be an incomplete feature at the moment
 
-#include "ccnl-core.c"
-#include "ccnl-ext-echo.c"
-#include "ccnl-ext-hmac.c"
-#include "ccnl-ext-http.c"
-#include "ccnl-ext-localrpc.c"
-#include "ccnl-ext-mgmt.c"
-#include "ccnl-ext-sched.c"
-#include "ccnl-ext-frag.c"
-#include "ccnl-ext-crypto.c"
-#include "ccnl-uapi.c"
+#include "../core/core.c"
+#include "../ext/echo.c"
+#include "../ext/hmac.c"
+#include "../ext/http.c"
+#include "../ext/localrpc.c"
+#include "../ext/mgmt.c"
+#include "../ext/sched.c"
+#include "../ext/frag.c"
+#include "../ext/crypto.c"
+#include "../ccnl-uapi.c"
 
 
 #endif /* CCNL_UAPI_H_ */

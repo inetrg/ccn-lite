@@ -22,7 +22,7 @@
 
 #define USE_FRAG
 
-#include "ccnl-common.c"
+#include "common.c"
 
 // ----------------------------------------------------------------------
 

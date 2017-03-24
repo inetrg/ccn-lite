@@ -24,7 +24,7 @@
 
 #ifdef USE_MGMT
 
-#include "ccnl-ext-crypto.c"
+#include "crypto.c"
 
 unsigned char contentobj_buf[2000];
 unsigned char faceinst_buf[2000];

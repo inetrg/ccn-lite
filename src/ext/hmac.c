@@ -22,7 +22,7 @@
 
 #ifdef USE_HMAC256
 
-#include "lib-sha256.c"
+#include "../lib-sha256.c"
 
 // RFC2014 keyval generation
 void

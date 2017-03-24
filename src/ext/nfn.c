@@ -28,10 +28,10 @@
 struct builtin_s *op_extensions;
 struct builtin_s bifs[];
 
-#include "ccnl-ext-nfncommon.c"
-#include "ccnl-ext-nfnparse.c"
-#include "ccnl-ext-nfnkrivine.c"
-#include "ccnl-ext-nfnops.c"
+#include "nfncommon.c"
+#include "nfnparse.c"
+#include "nfnkrivine.c"
+#include "nfnops.c"
 
 void
 ZAM_init(void)

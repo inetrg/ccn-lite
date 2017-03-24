@@ -180,9 +180,9 @@ inet_ntoa(struct in_addr a)
     return result;
 }
 
-#include "ccnl-ext-debug.c"
-#include "ccnl-os-time.c"
-#include "ccnl-ext-logging.c"
+#include "../ext/debug.c"
+#include "../ccnl-os-time.c"
+#include "../ext/logging.c"
 
 #define ccnl_app_RX(x,y)                do{}while(0)
 #define ccnl_print_stats(x,y)           do{}while(0)
@@ -205,19 +205,9 @@ char* ccnl_addr2ascii(sockunion *su);
 #define local_producer(...) 0
 #define cache_strategy_remove(...)      0
 
-#include "ccnl-core.c"
-#include "ccnl-ext-frag.c"
-#include "ccnl-ext-hmac.c"
-
-/*
-#include "ccnl-ext-http.c"
-#include "ccnl-ext-localrpc.c"
-#include "ccnl-ext-mgmt.c"
-#include "ccnl-ext-nfn.c"
-#include "ccnl-ext-nfnmonitor.c"
-#include "ccnl-ext-sched.c"
-#include "ccnl-ext-crypto.c"
-*/
+#include "../core/core.c"
+#include "../ext/frag.c"
+#include "../ext/hmac.c"
 
 // ----------------------------------------------------------------------
 

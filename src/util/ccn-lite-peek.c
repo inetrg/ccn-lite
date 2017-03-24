@@ -31,8 +31,8 @@
 #define NEEDS_PACKET_CRAFTING
 
 #define assert(...) do {} while(0)
-#include "ccnl-common.c"
-#include "ccnl-socket.c"
+#include "common.c"
+#include "socket.c"
 
 // #include "../lib-sha256.c"
 

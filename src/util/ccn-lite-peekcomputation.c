@@ -1,8 +1,8 @@
 
-#include "ccnl-common.c"
+#include "common.c"
 #include "../krivine-common.c"
 
-#include "ccnl-socket.c"
+#include "socket.c"
 
 int
 mkInterestCompute(char **namecomp, char *computation, int computationlen, char *out)

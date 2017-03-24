@@ -28,8 +28,8 @@
 #define USE_SUITE_LOCALRPC
 #define USE_SUITE_NDNTLV
 
-#include "ccnl-common.c"
-#include "ccnl-crypto.c"
+#include "common.c"
+#include "crypto.c"
 
 // ----------------------------------------------------------------------
 

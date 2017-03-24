@@ -9,7 +9,7 @@
 
 #include <assert.h>
 #include "ccnl-uapi.h"
-#include "ccnl-common.c"
+#include "util/common.c"
 
 
 

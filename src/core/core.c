@@ -1096,16 +1096,16 @@ ccnl_nonce_isDup(struct ccnl_relay_s *relay, struct ccnl_pkt_s *pkt)
 // dispatching the different formats (and respective forwarding semantics):
 
 
-#include "ccnl-pkt-switch.c"
+#include "../pkt-formats/switch.c"
 
-#include "ccnl-pkt-ccnb.c"
-#include "ccnl-pkt-ccntlv.c"
-#include "ccnl-pkt-cistlv.c"
-#include "ccnl-pkt-iottlv.c"
-#include "ccnl-pkt-ndntlv.c"
-#include "ccnl-pkt-localrpc.c" // must come after pkt-ndntlv.c
+#include "../pkt-formats/ccnb.c"
+#include "../pkt-formats/ccntlv.c"
+#include "../pkt-formats/cistlv.c"
+#include "../pkt-formats/iottlv.c"
+#include "../pkt-formats/ndntlv.c"
+#include "../pkt-formats/localrpc.c" // must come after pkt-ndntlv.c
 
-#include "ccnl-core-fwd.c"
+#include "../core/fwd.c"
 
 struct ccnl_suite_s ccnl_core_suites[CCNL_SUITE_LAST];
 
@@ -1245,6 +1245,6 @@ ccnl_core_cleanup(struct ccnl_relay_s *ccnl)
 #endif
 }
 
-#include "ccnl-core-util.c"
+#include "../core/util.c"
 
 // eof

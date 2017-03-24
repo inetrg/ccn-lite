@@ -57,23 +57,23 @@ void ccnl_core_addToCleanup(struct ccnl_buf_s *buf);
 #define local_producer(...) 0
 #define cache_strategy_remove(...)      0
 
-#include "ccnl-ext-debug.c"
-#include "ccnl-os-time.c"
-#include "ccnl-ext-logging.c"
+#include "../ext/debug.c"
+#include "../ccnl-os-time.c"
+#include "../ext/logging.c"
 
 int ccnl_app_RX(struct ccnl_relay_s *ccnl, struct ccnl_content_s *c);
 
 struct ccnl_prefix_s* ccnl_prefix_new(int suite, int cnt);
 int ccnl_pkt_prependComponent(int suite, char *src, int *offset, unsigned char *buf);
 
-#include "ccnl-core.c"
+#include "../core/core.c"
 
-#include "ccnl-ext-mgmt.c"
-#include "ccnl-ext-nfn.c"
-#include "ccnl-ext-nfnmonitor.c"
-#include "ccnl-ext-sched.c"
+#include "../ext/mgmt.c"
+#include "../ext/nfn.c"
+#include "../ext/nfnmonitor.c"
+#include "../ext/sched.c"
 
-#include "ccnl-ext-frag.c"
+#include "../ext/frag.c"
 
 
 char theSuite = CCNL_SUITE_DEFAULT;
@@ -324,7 +324,7 @@ ccnl_close_socket(int s)
 
 
 void ccnl_simu_cleanup(void *dummy, void *dummy2);
-#include "ccnl-simu-client.c"
+#include "../ccnl-simu-client.c"
 
 // ----------------------------------------------------------------------
 

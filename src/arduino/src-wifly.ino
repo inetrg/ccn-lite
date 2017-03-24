@@ -146,7 +146,7 @@ void loop() {
 
 EthernetUDP Udp;
 
-#include "../../ccn-lite-arduino.c"
+#include "../../platforms/ccn-lite-arduino.c"
 
 void setup()
 {

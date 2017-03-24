@@ -29,7 +29,7 @@
 #define USE_SUITE_IOTTLV
 #define USE_SUITE_NDNTLV
 
-#include "ccnl-common.c"
+#include "common.c"
 
 // ----------------------------------------------------------------------
 

@@ -108,9 +108,9 @@ ccnl_free(void *ptr)
     kfree(ptr);
 }
 
-#include "ccnl-ext-debug.c"
-#include "ccnl-os-time.c"
-#include "ccnl-ext-logging.c"
+#include "../ext/debug.c"
+#include "../ccnl-os-time.c"
+#include "../ext/logging.c"
 
 static void ccnl_lnxkernel_cleanup(void);
 char* ccnl_addr2ascii(sockunion *su);

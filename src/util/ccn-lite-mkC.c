@@ -30,8 +30,8 @@
 
 #define NEEDS_PACKET_CRAFTING
 
-#include "ccnl-common.c"
-#include "ccnl-crypto.c"
+#include "common.c"
+#include "crypto.c"
 
 
 // ----------------------------------------------------------------------

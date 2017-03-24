@@ -30,8 +30,8 @@
 
 #define CCNL_MAX_CHUNK_SIZE 4048
 
-#include "ccnl-common.c"
-#include "ccnl-crypto.c"
+#include "common.c"
+#include "crypto.c"
 
 int
 main(int argc, char *argv[])

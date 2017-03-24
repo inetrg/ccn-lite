@@ -29,8 +29,8 @@
 
 #define NEEDS_PACKET_CRAFTING
 
-#include "ccnl-common.c"
-#include "ccnl-socket.c"
+#include "common.c"
+#include "socket.c"
 
 // ----------------------------------------------------------------------
 

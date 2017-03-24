@@ -33,9 +33,9 @@
 
 #define NEEDS_PACKET_CRAFTING
 
-#include "ccnl-common.c"
-#include "../ccnl-ext-nfnparse.c"
-#include "ccnl-socket.c"
+#include "common.c"
+#include "../ext/nfnparse.c"
+#include "socket.c"
 
 int
 myprint(char *str, ...)

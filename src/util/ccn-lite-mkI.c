@@ -28,7 +28,7 @@
 
 #define NEEDS_PACKET_CRAFTING
 
-#include "ccnl-common.c"
+#include "common.c"
 
 // ----------------------------------------------------------------------
 
