@@ -505,16 +505,16 @@ ccnl_nfn_mkKeepalivePrefix(struct ccnl_prefix_s *pfx)
     struct ccnl_prefix_s *p;
     // unsigned char cmp[] = "ALIVE";
     // int cmplen = strlen((char*)cmp);
-    
+
     DEBUGMSG(TRACE, "ccnl_nfnprefix_mkKeepalivePrefix()\n");
-    
+
     p = ccnl_prefix_dup(pfx);
-    DEBUGMSG(TRACE, "  duped prefix: %s\n", ccnl_prefix_to_path(p)); 
+    DEBUGMSG(TRACE, "  duped prefix: %s\n", ccnl_prefix_to_path(p));
     // if (ccnl_prefix_appendCmp(p, cmp, cmplen) != 0)
     //     return NULL;
-        
+
     p->nfnflags |= CCNL_PREFIX_KEEPALIVE;
-    
+
     DEBUGMSG(TRACE, "  keep alive prefix: %s\n", ccnl_prefix_to_path(p));
     return p;
 }
@@ -531,7 +531,7 @@ ccnl_nfn_mkKeepaliveInterest(struct ccnl_relay_s *ccnl,
     struct ccnl_interest_s *i;
 
     DEBUGMSG(TRACE, "ccnl_nfn_mkKeepaliveInterest() nonce=%i\n", nonce);
-    
+
     pfx = ccnl_nfn_mkKeepalivePrefix(interest->pkt->pfx);
     if (!pfx)
         return NULL;
@@ -550,7 +550,7 @@ ccnl_nfn_mkKeepaliveInterest(struct ccnl_relay_s *ccnl,
             return NULL;
 
         from = interest->from;
-        
+
         // from = ccnl_malloc(sizeof(struct ccnl_face_s));
         // pkt = ccnl_calloc(1, sizeof(*pkt));
         // if (!from || !pkt) {
@@ -600,8 +600,8 @@ ccnl_nfn_interest_keepalive(struct ccnl_relay_s *relay, struct ccnl_interest_s *
 
     struct ccnl_interest_s *i = ccnl_nfn_mkKeepaliveInterest(relay, interest);
     if (!i)
-        return NULL;            
-    
+        return NULL;
+
     ccnl_interest_propagate(relay, i);
     return interest;
 }
@@ -633,8 +633,8 @@ int ccnl_nfnprefix_isCompute(struct ccnl_prefix_s *p)
     return p->compcnt > 0 && p->complen[0] == 7 && !memcmp(p->comp[0], "COMPUTE", 7);
 }
 
-int 
-ccnl_nfnprefix_isIntermediate(struct ccnl_prefix_s *p) 
+int
+ccnl_nfnprefix_isIntermediate(struct ccnl_prefix_s *p)
 {
     return p->nfnflags & CCNL_PREFIX_INTERMEDIATE;
 }

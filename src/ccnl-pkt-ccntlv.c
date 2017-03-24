@@ -450,7 +450,7 @@ ccnl_ccntlv_prependName(struct ccnl_prefix_s *name,
     if (name->nfnflags & CCNL_PREFIX_KEEPALIVE)
         if (ccnl_pkt_prependComponent(name->suite, "ALIVE", offset, buf) < 0)
             return -1;
-    
+
     if (name->nfnflags & CCNL_PREFIX_INTERMEDIATE){
         char internum[16];
         snprintf(internum, 16, "%d", name->internum);

@@ -232,6 +232,6 @@ def mkData(name, blob):
     nmbs = nmb + bytearray([0x16, 0x03, 0x1b, 0x01, 0x00]) + \
            bytearray([0x17, 0x00]) # DigestSha256 signature info + empty value
     return mkTorL(0x06) + mkTorL(len(nmbs)) + nmbs
-  
+
 
 # eof

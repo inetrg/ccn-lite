@@ -310,73 +310,73 @@ should be on the following areas:
 ### [Release 0.3.0](https://github.com/cn-uofbasel/ccn-lite/releases/tag/0.3.0) (Jul 2015)
 
 #### Code contributions:
-Lukas Beck  
-Christopher Scherb  
-Manolis Sifalakis  
-Christian F. Tschudin  
+Lukas Beck
+Christopher Scherb
+Manolis Sifalakis
+Christian F. Tschudin
 
 #### Feedback and other contributions:
-Fateh Al-Mufti  
-Frederik Brix  
-Patrick Buder  
-Daniel Federau  
-Ilir Fetai  
-Nenad Kokeza  
-David Kordsmeier  
-Dima Mansour  
-Marc Mosko  
-Mihai Daniel Rapcea  
-Fabian Rauschenbach  
-Yanick Salzmann  
-Maarten Schenk  
-Urs Schnurrenberger  
-Marco Suter  
-Marc-Andrea Tarnutzer  
-Marco Dieter Vogt  
-Akan Yilmaz  
+Fateh Al-Mufti
+Frederik Brix
+Patrick Buder
+Daniel Federau
+Ilir Fetai
+Nenad Kokeza
+David Kordsmeier
+Dima Mansour
+Marc Mosko
+Mihai Daniel Rapcea
+Fabian Rauschenbach
+Yanick Salzmann
+Maarten Schenk
+Urs Schnurrenberger
+Marco Suter
+Marc-Andrea Tarnutzer
+Marco Dieter Vogt
+Akan Yilmaz
 
 
 ### [Release 0.2.0](https://github.com/cn-uofbasel/ccn-lite/releases/tag/0.2.0) (Dec 2014)
 
 #### Code contributions:
-Basil Kohler  
-Christian Mehlis  
-Massimo Monti  
-Christopher Scherb  
-Manolis Sifalakis  
-Christian F. Tschudin  
+Basil Kohler
+Christian Mehlis
+Massimo Monti
+Christopher Scherb
+Manolis Sifalakis
+Christian F. Tschudin
 
 #### Code and documentation feedback:
-Samuel Bader  
-Christoph Betschart  
-Nore Derguti  
-Ralph Droms  
-Wilson A. Eghonghon  
-Daniel Federau  
-Ralph Gasser  
-Cedric Geissmann  
-Rasa Liebfried  
-Dario Maggi  
-Frank Müller  
-Marko Obradovic  
-Michaja Pressmar  
-Mihai D. Rapcea  
-Urs Schnurrenberger  
-Thomas Simonsen  
-Alexander Stiemer  
-Ziba Tavassoli  
-Simon Wang  
-Mario Weber  
+Samuel Bader
+Christoph Betschart
+Nore Derguti
+Ralph Droms
+Wilson A. Eghonghon
+Daniel Federau
+Ralph Gasser
+Cedric Geissmann
+Rasa Liebfried
+Dario Maggi
+Frank Müller
+Marko Obradovic
+Michaja Pressmar
+Mihai D. Rapcea
+Urs Schnurrenberger
+Thomas Simonsen
+Alexander Stiemer
+Ziba Tavassoli
+Simon Wang
+Mario Weber
 
 
 ### [Release 0.1.0](https://github.com/cn-uofbasel/ccn-lite/releases/tag/0.1.0) (Jul 2013)
 
 #### Code contributions:
-Stefan Braun  
-Pierre Imai  
-Basil Kohler  
-Thomas Meyer  
-Massimo Monti  
-Christopher Scherb  
-Manolis Sifalakis  
-Christian F. Tschudin  
+Stefan Braun
+Pierre Imai
+Basil Kohler
+Thomas Meyer
+Massimo Monti
+Christopher Scherb
+Manolis Sifalakis
+Christian F. Tschudin

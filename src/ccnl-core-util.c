@@ -157,14 +157,14 @@ ccnl_prefix_cmp(struct ccnl_prefix_s *pfx, unsigned char *md,
             if (*pfx->chunknum != *nam->chunknum)
                 {DEBUGMSG(VERBOSE, "1c\n"); goto done;}
         }
-    
+
 #ifdef USE_NFN
         if (nam->nfnflags != pfx->nfnflags) {
-            DEBUGMSG(VERBOSE, "1d\n"); 
+            DEBUGMSG(VERBOSE, "1d\n");
             goto done;
         }
         if (nam->internum != pfx->internum) {
-            DEBUGMSG(VERBOSE, "1e\n"); 
+            DEBUGMSG(VERBOSE, "1e\n");
             goto done;
         }
 #endif // USE_NFN
@@ -177,7 +177,7 @@ ccnl_prefix_cmp(struct ccnl_prefix_s *pfx, unsigned char *md,
             goto done;
         }
         if (nam->internum != pfx->internum) {
-            DEBUGMSG(VERBOSE, "2b\n"); 
+            DEBUGMSG(VERBOSE, "2b\n");
             goto done;
         }
     }

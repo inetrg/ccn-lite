@@ -201,7 +201,7 @@ Usage:
             DEBUGMSG(ERROR, "fileext for suite %d not implemented\n", suite);
     }
 
-    
+
     FILE *fp = fopen(infname, "r");
     fseek(fp, 0L, SEEK_END);
     int sz = ftell(fp);
@@ -227,7 +227,7 @@ Usage:
         case CCNL_SUITE_CCNTLV:
             contentlen = ccnl_ccntlv_prependContentWithHdr(name,
                             (unsigned char *)chunk_buf, chunk_len,
-                            &lastchunknum, //is_last ? &chunknum : NULL, 
+                            &lastchunknum, //is_last ? &chunknum : NULL,
                             NULL, // int *contentpos
                             &offs, out);
             break;

@@ -20,7 +20,7 @@ GCC_GTEQ_40900 := $(shell expr ${GCC_VERSION} \>= 40900)
 
 # general flags used on both linux and OSX
 CCNLCFLAGS=-Wall -Werror -std=c99 -g
-	
+
 ifeq ($(RIOTBASE),)
 	CCNLCFLAGS += -pedantic -O0
 endif
@@ -195,7 +195,7 @@ ccn-lite-relay-nack: ${CCNL_RELAY_LIB}
 	@${CREATE_BIN}
 
 # ccn-lite-simplenfn-keepalive: ccn-lite-simplenfn-keepalive.c \
-# 	${CCNL_RELAY_LIB} 
+# 	${CCNL_RELAY_LIB}
 # 	${CC} -o $@ ${CCNLCFLAGS} $< ${EXTLIBS}
 # 	@${CREATE_BIN}
 

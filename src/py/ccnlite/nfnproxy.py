@@ -109,7 +109,7 @@ class NFNproxy(object):
         idxLeftParam = expression.find('(')
         idxRightParam = expression.rfind(')')
         idxSpace = expression.find(' ')
-                  
+
         if ((idxLeftParam > -1) and ((idxSpace < 0) or idxLeftParam < idxSpace)
                                       and (idxRightParam == len(expression)-1)):
             #   Format 'myfunc(mydata)'
@@ -151,7 +151,7 @@ class NFNproxy(object):
             # print "expressing interest in", expression
             self._access.getLabeledContent(expression, raw=True,
                                       callback=lambda data: resultHandle(data))
-                                          
+
 
     def buildFunctionRetriever(self, functionName, arguments, resultHandle):
         idxDot = functionName.rfind('/')

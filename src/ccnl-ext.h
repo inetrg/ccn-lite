@@ -52,7 +52,7 @@ int ccnl_cmp2int(unsigned char *cmp, int cmplen);
 
 
 struct ccnl_buf_s *ccnl_mkSimpleInterest(struct ccnl_prefix_s *name, int *nonce);
-struct ccnl_buf_s *ccnl_mkSimpleContent(struct ccnl_prefix_s *name, 
+struct ccnl_buf_s *ccnl_mkSimpleContent(struct ccnl_prefix_s *name,
                                         unsigned char *payload, int paylen, int *payoffset);
 
 #ifdef USE_CCNxDIGEST

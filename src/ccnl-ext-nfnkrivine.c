@@ -335,7 +335,7 @@ ZAM_fox(struct ccnl_relay_s *ccnl, struct configuration_s *config,
             break;
         default:
             DEBUGMSG(DEBUG, "  info: Parameter %d %s %p\n", i,
-                                    (char *)config->fox_state->params[i]->content, 
+                                    (char *)config->fox_state->params[i]->content,
                                     config->fox_state->params[i]->content);
             break;
         }
@@ -420,7 +420,7 @@ handlecontent: //if result was found ---> handle it
                 break;
             }
 	    }
-	    
+
         if (isANumber){
             int *integer = ccnl_malloc(sizeof(int));
             *integer = strtol((char*)c->pkt->content, 0, 0);
@@ -439,7 +439,7 @@ handlecontent: //if result was found ---> handle it
                         ccnl_prefix_to_path(mapping->value));
         }
     }
-    
+
     DEBUGMSG(DEBUG, " FOX continuation: %s\n", contd);
     return ccnl_strdup(contd);
 }

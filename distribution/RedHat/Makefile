@@ -1,4 +1,4 @@
-currdir:=$(shell pwd) 
+currdir:=$(shell pwd)
 workdir:=$(shell echo ${currdir}/rpmbuild | tr -d ' ')
 
 all: rpm

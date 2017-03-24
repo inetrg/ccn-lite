@@ -161,7 +161,7 @@ ccnl_nfn(struct ccnl_relay_s *ccnl, // struct ccnl_buf_s *orig,
 
     if (interest && interest->pkt->pfx->compcnt > 1) { // forward interests with outsourced components
         struct ccnl_prefix_s *copy = ccnl_prefix_dup(prefix);
-	
+
         copy->compcnt -= 1;
         DEBUGMSG(DEBUG, "   checking local available of %s\n", ccnl_prefix_to_path(copy));
         ccnl_nfnprefix_clear(copy, CCNL_PREFIX_NFN);
@@ -248,7 +248,7 @@ ccnl_nfn_RX_request(struct ccnl_relay_s *ccnl, struct ccnl_face_s *from,
 {
     struct ccnl_interest_s *i;
 
-    if (!ccnl_nfnprefix_isNFN((*pkt)->pfx) || 
+    if (!ccnl_nfnprefix_isNFN((*pkt)->pfx) ||
 #ifdef USE_TIMEOUT_KEEPALIVE
         ccnl_nfnprefix_isKeepalive((*pkt)->pfx) ||
         ccnl_nfnprefix_isIntermediate((*pkt)->pfx) ||
@@ -294,7 +294,7 @@ ccnl_nfn_RX_result(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
             DEBUGMSG(TRACE, "  interest faceid=%d\n", i_it->from->faceid);
 
 #ifdef USE_TIMEOUT_KEEPCONTENT
-            c->served_cnt++; // a computation has been waiting for this content, no need to keep it  
+            c->served_cnt++; // a computation has been waiting for this content, no need to keep it
 #endif
 
 #ifdef USE_TIMEOUT_KEEPALIVE
@@ -304,13 +304,13 @@ ccnl_nfn_RX_result(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
 #ifdef USE_TIMEOUT_KEEPALIVE
             }
 #endif
-            
+
 	        DEBUGMSG_CFWD(INFO, "data in rx resulti after add to cache %.*s\n", c->pkt->contlen, c->pkt->content);
             DEBUGMSG(DEBUG, "Continue configuration for configid: %d with prefix: %s\n",
                   faceid, ccnl_prefix_to_path(c->pkt->pfx));
             i_it->flags |= CCNL_PIT_COREPROPAGATES;
             i_it->from = NULL;
-            
+
 #ifdef USE_TIMEOUT_KEEPALIVE
             if (!ccnl_nfnprefix_isKeepalive(c->pkt->pfx)) {
 #endif
@@ -342,9 +342,9 @@ ccnl_nfn_RX_keepalive(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
         if (!ccnl_prefix_cmp(c->pkt->pfx, NULL, i_it->pkt->pfx, CMP_EXACT)) {
             DEBUGMSG(DEBUG, "    matches interest <%s>\n", ccnl_prefix_to_path(i_it->pkt->pfx));
             if (i_it->keepalive_origin != NULL) {
-                DEBUGMSG(DEBUG, "      reset interest <%s>\n", 
+                DEBUGMSG(DEBUG, "      reset interest <%s>\n",
                     ccnl_prefix_to_path(i_it->keepalive_origin->pkt->pfx));
-                
+
                 // reset original interest
                 i_it->keepalive_origin->last_used = CCNL_NOW();
                 i_it->keepalive_origin->retries = 0;
@@ -353,7 +353,7 @@ ccnl_nfn_RX_keepalive(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
                 i_it->keepalive_origin->keepalive = NULL;
                 i_it->keepalive_origin = NULL;
                 // i_it = ccnl_nfn_interest_remove(relay, i_it);
-                
+
                 ++found;
             }
         }
@@ -363,7 +363,7 @@ ccnl_nfn_RX_keepalive(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
     return found > 0;
 }
 
-int 
+int
 ccnl_nfn_RX_intermediate(struct ccnl_relay_s *relay, struct ccnl_face_s *from, struct ccnl_pkt_s **pkt) {
     TRACEIN();
 
@@ -394,9 +394,9 @@ ccnl_nfn_RX_intermediate(struct ccnl_relay_s *relay, struct ccnl_face_s *from, s
 
             char *s = NULL;
             DEBUGMSG(INFO, "Original (modified) prefix for intermediate: %s\n", s = ccnl_prefix_to_path(interm_pfx));
-            ccnl_free(s);  
+            ccnl_free(s);
 
-            // ccnl_free((*pkt)->pfx);    
+            // ccnl_free((*pkt)->pfx);
             // (*pkt)->pfx = interm_pfx; // ok?
 
             int dataoffset;

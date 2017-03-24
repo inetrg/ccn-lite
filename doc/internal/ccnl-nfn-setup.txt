@@ -24,14 +24,14 @@
 
 NFN is an extension to the CCNx to deliver dynamic created content and compute results out of input data.
 The NFN system consists of two additional layer which are created on top of the CCN system:
-	
+
 	Service Layer
 	NFN Layer
 	CCN Layer
 
 The NFN Layer is for distributing computations over the network, while the Service Layer computes results.
 The NFN Layer is directly included into the CCN system.
-To compile a CCN-lite-relay with integrated NFN system one can use the Makefile target 
+To compile a CCN-lite-relay with integrated NFN system one can use the Makefile target
 	ccn-nfn-relay
 or
 	ccn-nfn-relay-nack.
@@ -56,4 +56,4 @@ The script test/scripts/nfn/compute_demo.sh creates this test environment and pe
 To use thunks the script test/scripts/nfn/compute_thunk_demo.sh can be used.
 
 
-	
+

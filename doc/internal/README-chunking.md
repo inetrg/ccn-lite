@@ -8,8 +8,8 @@ In the following the encoding of this protocol for both CCNTLV and NDNTLV as wel
 
 ## CCNTLV
 In CCNx are two protocols which can be used for chunking. One makes use of metadata, the other is a simpler scheme relying only on chunk numbers. `ccn-lite-produce` implements the ladder.
-In CCNx a name consists of segments with types, where one type is called `Chunk`. The value is an integer and represents the chunk number (for interests and content objects).  
-The last chunk number is encoded in an optional TLV MetaData field. The field is called `ENDChunk` and its value is an integer. This integer is the number of the last chunk of a stream of chunks. 
+In CCNx a name consists of segments with types, where one type is called `Chunk`. The value is an integer and represents the chunk number (for interests and content objects).
+The last chunk number is encoded in an optional TLV MetaData field. The field is called `ENDChunk` and its value is an integer. This integer is the number of the last chunk of a stream of chunks.
 For more details see [CCNx Content Object Chunking](http://www.ccnx.org/pubs/ccnx-mosko-chunking-01.txt)
 
 ## NDNTLV
@@ -20,12 +20,12 @@ To encode the last chunk number, there is an optional field for the content obje
 For more details see [NDN Packet Spec for Content Objects](http://named-data.net/doc/ndn-tlv/data.html).
 
 ## Produce
-`ccn-lite-produce` implements both the CCNTLV and NDNTLV chunking protocols. CCNB or other encodings are not yet supported. It splits data into equally sized (either maximum of 4096B or user defined with `-c` if it should be smaller) chunks where the last chunk contains the value for the last chunk. 
+`ccn-lite-produce` implements both the CCNTLV and NDNTLV chunking protocols. CCNB or other encodings are not yet supported. It splits data into equally sized (either maximum of 4096B or user defined with `-c` if it should be smaller) chunks where the last chunk contains the value for the last chunk.
 By default it prints all chunks to stdout. With `-o DIRNAME` each chunk is written to a separate file (`-f FILENAME` can be used to change the name of the files).
 
 ## Fetch
 `ccn-lite-fetch` retrieves the data for either a single content object (only NDN) or a stream of chunks. For NDN it first sends an interest for the user-provided name. For CCNx the first interest is always for chunk 0, because CCNx uses exact matches for content. This has the consequence that fetch is only able to fetch chunk streams for CCNx and not a single content object.
 
-If the retrieved object for the first interest does not have a chunk number, the data is extracted and printed and the application exits. Otherwise it continues to fetch all chunks. If the first chunk does not have the chunk number 0, it copies the name, replaces the chunk number with the chunk number 0, drops the fetched content object and sends an interest for the first chunk 0. For each retrieved chunk, it replaces the chunk number in the name of the fetched content object with the next chunk number to get the next chunk, until there is a chunk where the chunk number is equal to the last chunk number (or there is a timeout for a specific chunk). 
+If the retrieved object for the first interest does not have a chunk number, the data is extracted and printed and the application exits. Otherwise it continues to fetch all chunks. If the first chunk does not have the chunk number 0, it copies the name, replaces the chunk number with the chunk number 0, drops the fetched content object and sends an interest for the first chunk 0. For each retrieved chunk, it replaces the chunk number in the name of the fetched content object with the next chunk number to get the next chunk, until there is a chunk where the chunk number is equal to the last chunk number (or there is a timeout for a specific chunk).
 
 It is important to note that by taking the retrieved name and adding/replacing a chunk number, with NDN fetch is able to retrieve data for names which have some other name components potentially not provided by the user (like the version number). Without this, a fetch for the name `/foo/bar` would not be able to retrieve chunks of the form `/foo/bar/versionbytes/%00%00` because an interest for `/foo/bar/%00%00` would be sent. For CCNx, fetch only works if the provided name is fully qualified.

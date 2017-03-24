@@ -1,5 +1,5 @@
 Name:		CCN-Lite
-Version:	0.3.0	
+Version:	0.3.0
 Release:	1%{?dist}
 Summary:	CCN-lite
 
@@ -7,11 +7,11 @@ Group:		Application/Internet
 License:	ISC
 URL:		ccn-lite.net
 
-#BuildRequires:	
-#Requires:	
+#BuildRequires:
+#Requires:
 
 %description
-CCN-Lite is a 
+CCN-Lite is a
 
 #%prep
 #%setup -q
@@ -20,7 +20,7 @@ CCN-Lite is a
 #%build
 #%configure
 #make %{?_smp_mflags}
-#make the bin files, 
+#make the bin files,
 
 %install
 #%make_install

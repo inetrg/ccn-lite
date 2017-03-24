@@ -200,7 +200,7 @@ struct ccnl_prefix_s {
 # define CCNL_PREFIX_NFN   0x01
 
 # define CCNL_PREFIX_COMPU 0x04
-// #ifdef USE_TIMEOUT_KEEPALIVE 
+// #ifdef USE_TIMEOUT_KEEPALIVE
 // FIXME: these values need to be compiled conditionally
 # define CCNL_PREFIX_KEEPALIVE 0x08
 # define CCNL_PREFIX_INTERMEDIATE 0x10
@@ -267,7 +267,7 @@ struct ccnl_interest_s {
     int retries;
 #ifdef USE_TIMEOUT_KEEPALIVE
     struct ccnl_interest_s *keepalive; // the keepalive interest dispatched for this interest
-    struct ccnl_interest_s *keepalive_origin; // the interest that dispatched this keepalive interest 
+    struct ccnl_interest_s *keepalive_origin; // the interest that dispatched this keepalive interest
 #endif
 };
 

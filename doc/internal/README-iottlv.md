@@ -48,13 +48,13 @@ else
   The encoding scheme of type and value is the one used in NDN'2013:
 
     if the first octet is < 253, the number is encoded in that octet
- 
+
     if the first octet == 253, the number is encoded in the following
     2 octets, in net byte-order
 
     if the first octet == 254, the number is encoded in the following
     4 octets, in net byte-order
- 
+
     if the first octet == 255, the number is encoded in the following
     8 octets, in net byte-order
 

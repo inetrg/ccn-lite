@@ -64,13 +64,13 @@ Enc(fmt) :== | 0x80 | VARINT(fmt) |
   The VARINT representation for the fmt value is according to NDN2013:
 
     if the first octet is < 253, the format is encoded in that octet
- 
+
     if the first octet == 253, the format is encoded in the following
     2 octets, in net byte-order
 
     if the first octet == 254, the format is encoded in the following
     4 octets, in net byte-order
- 
+
     if the first octet == 255, the format is encoded in the following
     8 octets, in net byte-order
 
