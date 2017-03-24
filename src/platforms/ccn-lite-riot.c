@@ -55,8 +55,10 @@
 /**
  * Frees all memory directly and indirectly allocated for prefix information
  */
-#define free_prefix(p)  do{ if(p) \
+#ifndef free_prefix
+#   define free_prefix(p)  do{ if(p) \
                 free_4ptr_list(p->bytes,p->comp,p->complen,p); } while(0)
+#endif
 
 /**
  * Frees memory for a given content and the associated packet data
