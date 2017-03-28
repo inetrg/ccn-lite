@@ -23,8 +23,9 @@
  */
 
 // ----------------------------------------------------------------------
-#ifdef CCNL_ARDUINO
+#include "ccnl-utils.h"
 
+#ifdef CCNL_ARDUINO
 
 // typedef int time_t;
 #define Hz 1000

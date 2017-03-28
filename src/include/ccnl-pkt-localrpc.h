@@ -23,6 +23,7 @@
 #ifndef PKT_LOCALRPC_H
 #define PKT_LOCALRPC_H
 
+#include "ccnl-core.h"
 
 struct rpc_exec_s { // execution context
     struct rdr_ds_s *ostack; // operands

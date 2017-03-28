@@ -27,6 +27,8 @@
 #include <stdint.h>
 #include <sys/socket.h>
 
+#include "ccnl-defs.h"
+
 #ifdef CCNL_RIOT
 #include "mutex.h"
 #endif

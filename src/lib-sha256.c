@@ -47,6 +47,10 @@
 
 // basic definitions
 
+#include <assert.h>
+#include <stdint.h>
+#include <string.h>
+
 #define SHA256_BLOCK_LENGTH		64
 #define SHA256_DIGEST_LENGTH		32
 #define SHA256_DIGEST_STRING_LENGTH	(SHA256_DIGEST_LENGTH * 2 + 1)

@@ -546,6 +546,10 @@ ccnl_localrpc_exec(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
     return 0;
 }
 
+#else
+
+extern int make_iso_compilers_happy;
+
 #endif //USE_SUITE_LOCALRPC
 
 // eof
