@@ -133,8 +133,10 @@ IOTTLV_LIB = include/ccnl-pkt-iottlv.h pkt-formats/iottlv.c
 NDNTLV_LIB = include/ccnl-pkt-ndntlv.h pkt-formats/ndntlv.c
 LOCALRPC_LIB = include/ccnl-pkt-localrpc.h pkt-formats/localrpc.c ext/localrpc.c
 SUITE_LIBS = ${CCNB_LIB} ${CCNTLV_LIB} ${CISTLV_LIB} ${IOTTLV_LIB} ${NDNTLV_LIB} ${LOCALRPC_LIB}
-UTIL_LIB := util/base64.o util/common.o
 
+UTIL_OBJS := util/base64.o util/common.o
+SUITE_OBJS := pkt-formats/ccnb.o pkt-formats/ccntlv.o pkt-formats/cistlv.o \
+              pkt-formats/iottlv.o pkt-formats/ndntlv.o pkt-formats/localrpc.o pkt-formats/switch.o
 
 CCNL_CORE_LIB = include/ccnl-defs.h include/ccnl-core.h core/core.c core/fwd.c core/util.c
 
@@ -167,10 +169,32 @@ lib-ccn-lite.a: platforms/ccn-lite-riot.c \
 	${SUITE_LIBS} ${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB}
 	${CC} -o $@ ${RIOT_CFLAGS} ${CCNLCFLAGS} -c $<
 
-lib-ccn-lite-utils.a: ${UTIL_LIB} util/base64.c util/common.c
-	${AR} rcs $@ ${UTIL_LIB}
+lib-ccn-lite-utils.a: ${UTIL_OBJS} util/base64.c util/common.c
+	${AR} rcs $@ ${UTIL_OBJS}
 
-$(UTIL_LIB): %.o: %.c
+lib-ccn-lite-suite.a: ${SUITE_OBJS}
+	${AR} rcs $@
+
+%.o: %.c
+	${CC} -o $@ ${RIOT_CFLAGS} ${CCNLCFLAGS} -c $<
+
+ccn-lite-minimalrelay: platforms/ccn-lite-minimalrelay.c \
+	${SUITE_LIBS} ${CCNL_CORE_LIB}
+	${CC} -o $@ ${CCNLCFLAGS} $<
+	@${CREATE_BIN}
+
+ccn-nfn-relay: ${CCNL_RELAY_LIB}
+	${CC} -o $@ ${CCNLCFLAGS} $< ${EXTLIBS}
+	@${CREATE_BIN}
+
+ccn-nfn-relay-nack: ${CCNL_RELAY_LIB}
+	${CC} -o $@ ${CCNLCFLAGS} ${NACKFLAGS} $< ${EXTLIBS}
+	@${CREATE_BIN}
+
+ccn-lite-relay: ${CCNL_RELAY_LIB}
+	${CC} -o $@ ${CCNLCFLAGS} $< ${EXTLIBS}
+	@${CREATE_BIN}
+%.o: %.c
 	${CC} -o $@ ${RIOT_CFLAGS} ${CCNLCFLAGS} -c $<
 
 ccn-lite-minimalrelay: platforms/ccn-lite-minimalrelay.c \
@@ -194,7 +218,7 @@ ccn-lite-relay-nack: ${CCNL_RELAY_LIB}
 	${CC} -o $@ ${CCNLCFLAGS} ${NACKFLAGS} $< ${EXTLIBS}
 	@${CREATE_BIN}
 
-ccn-lite-simu: platforms/ccn-lite-simu.c  ${SUITE_LIBS} \
+ccn-lite-simu: platforms/ccn-lite-simu.c  ${SUITE_OBJS} \
 	${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB} \
 	ccnl-simu-client.c
 	${EXTMAKE}

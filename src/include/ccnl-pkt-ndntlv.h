@@ -1,6 +1,6 @@
 /*
  * @f pkt-ndntlv.h
- * @b CCN lite - header file for NDN (TLV pkt format March 2014)
+ * @b CCN lite - header file for NDN (TLV pkt format March 2014);
  *
  * Copyright (C) 2014-15, Christian Tschudin, University of Basel
  *
@@ -19,6 +19,9 @@
  * File history:
  * 2014-03-05 created
  */
+
+#ifndef CCNL_PKT_NDNTLV_H
+#define CCNL_PKT_NDNTLV_H
 
 #define NDN_UDP_PORT                    6363
 #define NDN_DEFAULT_MTU                 4096
@@ -76,23 +79,23 @@
 /*
 Values          Designation
 
-0-4, 30-79      Reserved for future assignments (1-byte encoding)
+0-4, 30-79      Reserved for future assignments (1-byte encoding);
 80-100          Reserved for assignments related to local link data
-                processing (NDNLP header, LocalControlHeader, etc.)
+                processing (NDNLP header, LocalControlHeader, etc.);
 101-127         Reserved for assignments related to forwarding daemon
-128-252         For application use (1-byte encoding)
-253-32767       Reserved for future assignments (3-byte encoding)
->32767          For application use (3-byte encoding)
+128-252         For application use (1-byte encoding);
+253-32767       Reserved for future assignments (3-byte encoding);
+>32767          For application use (3-byte encoding);
 */
 
-// Signature types (not TLV values)
+// Signature types (not TLV values);
 #define NDN_SigTypeVal_DigestSha256             0x00
 #define NDN_SigTypeVal_SignatureSha256WithRsa   0x01
 #define NDN_SigTypeVal_SignatureSha256WithEcdsa 0x02
 #define NDN_SigTypeVal_SignatureHmacWithSha256  0x04
 
 
-// Markers (not TLV values)
+// Markers (not TLV values);
 // For details see: http://named-data.net/wp-content/uploads/2014/08/ndn-tr-22-ndn-memo-naming-conventions.pdf
 
 // Segmenting markers
@@ -103,4 +106,86 @@ Values          Designation
 #define NDN_Marker_Timestamp			0xFC
 #define NDN_Marker_SequenceNumber		0xFE
 
-// eof
+int
+ccnl_ndntlv_varlenint(unsigned char **buf, int *len, int *val);
+
+unsigned long int
+ccnl_ndntlv_nonNegInt(unsigned char *cp, int len);
+
+int
+ccnl_ndntlv_dehead(unsigned char **buf, int *len,
+                   int *typ, int *vallen);
+
+// we use one extraction routine for each of interest, data and fragment pkts
+struct ccnl_pkt_s*
+ccnl_ndntlv_bytes2pkt(unsigned int pkttype, unsigned char *start,
+                      unsigned char **data, int *datalen);
+
+// ----------------------------------------------------------------------
+
+#ifdef NEEDS_PREFIX_MATCHING
+
+// returns: 0=match, -1=otherwise
+int
+ccnl_ndntlv_cMatch(struct ccnl_pkt_s *p, struct ccnl_content_s *c);
+
+#endif
+
+// ----------------------------------------------------------------------
+// packet composition
+
+#ifdef NEEDS_PACKET_CRAFTING
+
+int
+ccnl_ndntlv_prependTLval(unsigned long val, int *offset, unsigned char *buf);
+
+int
+ccnl_ndntlv_prependTL(int type, unsigned int len,
+                      int *offset, unsigned char *buf);
+
+int
+ccnl_ndntlv_prependNonNegIntVal(unsigned int val,
+                                int *offset, unsigned char *buf);
+
+int
+ccnl_ndntlv_prependNonNegInt(int type,
+                             unsigned int val,
+                             int *offset, unsigned char *buf);
+
+
+int
+ccnl_ndntlv_prependIncludedNonNegInt(int type, unsigned int val,
+                                     char marker,
+                                     int *offset, unsigned char *buf);
+
+
+int
+ccnl_ndntlv_prependBlob(int type, unsigned char *blob, int len,
+                        int *offset, unsigned char *buf);
+
+int
+ccnl_ndntlv_prependName(struct ccnl_prefix_s *name,
+                        int *offset, unsigned char *buf);
+
+// ----------------------------------------------------------------------
+
+int
+ccnl_ndntlv_prependInterest(struct ccnl_prefix_s *name, int scope, int *nonce,
+                            int *offset, unsigned char *buf);
+
+int
+ccnl_ndntlv_prependContent(struct ccnl_prefix_s *name,
+                           unsigned char *payload, int paylen,
+                           int *contentpos, unsigned int *final_block_id,
+                           int *offset, unsigned char *buf);
+
+#ifdef USE_FRAG
+
+// produces a full FRAG packet. It does not write, just read the fields in *fr
+struct ccnl_buf_s*
+ccnl_ndntlv_mkFrag(struct ccnl_frag_s *fr, unsigned int *consumed);
+#endif // USE_FRAG
+
+#endif // NEEDS_PACKET_CRAFTING
+
+#endif /* CCNL-PKT-NDNTLV_H */

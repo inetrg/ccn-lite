@@ -79,4 +79,71 @@
 #define CCN_DTAG_FragP          463
 #define CCN_DTAG_CCNPDU         17702112
 
+int
+ccnl_ccnb_consume(int typ, int num, unsigned char **buf, int *len,
+                  unsigned char **valptr, int *vallen);
+
+int
+ccnl_ccnb_dehead(unsigned char **buf, int *len, int *num, int *typ);
+
+int
+ccnl_ccnb_consume(int typ, int num, unsigned char **buf, int *len,
+                  unsigned char **valptr, int *vallen);
+
+int
+ccnl_ccnb_data2uint(unsigned char *cp, int len);
+
+struct ccnl_pkt_s*
+ccnl_ccnb_bytes2pkt(unsigned char *start, unsigned char **data, int *datalen);
+
+int
+ccnl_ccnb_unmkBinaryInt(unsigned char **data, int *datalen,
+                        unsigned int *result, unsigned char *width);
+#ifdef NEEDS_PREFIX_MATCHING
+/**
+ * @returns: 0=match, -1=otherwise
+ */
+int
+ccnl_ccnb_cMatch(struct ccnl_pkt_s *p, struct ccnl_content_s *c);
+#endif
+
+#ifdef NEEDS_PACKET_CRAFTING
+int
+ccnl_ccnb_mkHeader(unsigned char *buf, unsigned int num, unsigned int tt);
+
+int
+ccnl_ccnb_addBlob(unsigned char *out, char *cp, int cnt);
+
+int
+ccnl_ccnb_mkField(unsigned char *out, unsigned int num, int typ,
+                  unsigned char *data, int datalen);
+
+int
+ccnl_ccnb_mkBlob(unsigned char *out, unsigned int num, unsigned int tt,
+                 char *cp, int cnt);
+
+int
+ccnl_ccnb_mkStrBlob(unsigned char *out, unsigned int num, unsigned int tt,
+                    char *str);
+
+int
+ccnl_ccnb_mkBinaryInt(unsigned char *out, unsigned int num, unsigned int tt,
+                      unsigned int val, int bytes);
+
+int
+ccnl_ccnb_mkComponent(unsigned char *val, int vallen, unsigned char *out);
+
+int
+ccnl_ccnb_mkName(struct ccnl_prefix_s *name, unsigned char *out);
+
+int
+ccnl_ccnb_fillInterest(struct ccnl_prefix_s *name, int *nonce,
+                       unsigned char *out, int outlen);
+
+int
+ccnl_ccnb_fillContent(struct ccnl_prefix_s *name, unsigned char *data,
+                      int datalen, int *contentpos, unsigned char *out);
+#endif
+
+
 // eof

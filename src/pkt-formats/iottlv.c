@@ -20,8 +20,12 @@
  * 2014-11-05 created
  */
 
-#ifdef USE_SUITE_IOTTLV
+#include <arpa/inet.h>
 
+#include "ccnl-defs.h"
+#include "ccnl-headers.h"
+#include "ccnl-utils.h"
+#include "ccnl-ext-debug.h"
 #include "ccnl-pkt-iottlv.h"
 
 // ----------------------------------------------------------------------
@@ -604,7 +608,5 @@ ccnl_iottlv_mkFrag(struct ccnl_frag_s *fr, unsigned int *consumed)
 #endif
 
 #endif // NEEDS_PACKET_CRAFTING
-
-#endif // USE_SUITE_IOTTLV
 
 // eof

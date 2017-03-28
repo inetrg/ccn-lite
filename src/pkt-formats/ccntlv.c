@@ -21,8 +21,9 @@
  * 2014-11-05 merged from pkt-ccntlv-enc.c pkt-ccntlv-dec.c
  */
 
-#ifdef USE_SUITE_CCNTLV
-
+#include "ccnl-defs.h"
+#include "ccnl-headers.h"
+#include "ccnl-ext-debug.h"
 #include "ccnl-pkt-ccntlv.h"
 
 #ifndef DEBUGMSG_PCNX
@@ -623,7 +624,5 @@ ccnl_ccntlv_mkFrag(struct ccnl_frag_s *fr, unsigned int *consumed)
 #endif
 
 #endif // NEEDS_PACKET_CRAFTING
-
-#endif // USE_SUITE_CCNTLV
 
 // eof

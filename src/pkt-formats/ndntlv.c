@@ -28,7 +28,7 @@
 // ----------------------------------------------------------------------
 // packet parsing
 
-static int
+int
 ccnl_ndntlv_varlenint(unsigned char **buf, int *len, int *val)
 {
 

@@ -44,6 +44,8 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
+#include "ccnl-utils.h"
+
 #ifndef _DEFAULT_SOURCE
 int inet_aton(const char *cp, struct in_addr *inp);
 #endif
@@ -91,16 +93,6 @@ int inet_aton(const char *cp, struct in_addr *inp);
 #define ccnl_calloc(n,s)                calloc(n,s)
 #define ccnl_realloc(p,s)               realloc(p,s)
 #define ccnl_free(p)                    free(p)
-
-#define free_2ptr_list(a,b)     ccnl_free(a), ccnl_free(b)
-#define free_3ptr_list(a,b,c)   ccnl_free(a), ccnl_free(b), ccnl_free(c)
-#define free_4ptr_list(a,b,c,d) ccnl_free(a), ccnl_free(b), ccnl_free(c), ccnl_free(d);
-#define free_5ptr_list(a,b,c,d,e) ccnl_free(a), ccnl_free(b), ccnl_free(c), ccnl_free(d), ccnl_free(e);
-
-#define free_prefix(p)  do{ if(p) \
-                free_5ptr_list(p->bytes,p->comp,p->complen,p->chunknum,p); } while(0)
-#define free_content(c) do{ /* free_prefix(c->name); */ free_packet(c->pkt); \
-                        ccnl_free(c); } while(0)
 
 #define ccnl_frag_new(a,b)                      NULL
 #define ccnl_frag_destroy(e)                    do {} while(0)

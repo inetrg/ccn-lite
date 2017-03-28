@@ -71,24 +71,12 @@
 
 
 enum {
-#ifdef USE_SUITE_CCNB
   CCNL_SUITE_CCNB = 1,
-#endif
-#ifdef USE_SUITE_CCNTLV
   CCNL_SUITE_CCNTLV = 2,
-#endif
-#ifdef USE_SUITE_CISTLV
   CCNL_SUITE_CISTLV = 3,
-#endif
-#ifdef USE_SUITE_IOTTLV
   CCNL_SUITE_IOTTLV = 4,
-#endif
-#ifdef USE_SUITE_LOCALRPC
   CCNL_SUITE_LOCALRPC = 5,
-#endif
-#ifdef USE_SUITE_NDNTLV
   CCNL_SUITE_NDNTLV = 6,
-#endif
   CCNL_SUITE_LAST = 7
 };
 

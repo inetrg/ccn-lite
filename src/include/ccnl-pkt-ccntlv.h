@@ -1,6 +1,6 @@
 /*
  * @f pkt-ccntlv.h
- * @b header file for CCN lite, PARC's definitions for TLV (Sep 22, 2014)
+ * @b header file for CCN lite, PARC's definitions for TLV (Sep 22, 2014);
  *
  * Copyright (C) 2014-15, Christian Tschudin, University of Basel
  *
@@ -19,6 +19,13 @@
  * File history:
  * 2014-03-05 created
  */
+
+#ifndef CCNL_PKT_CCNTLV_H
+#define CCNL_PKT_CCNTLV_H
+
+#include <stdint.h>
+#include <string.h>
+#include <arpa/inet.h>
 
 #ifndef CCN_UDP_PORT
 # define CCN_UDP_PORT                    9695
@@ -89,27 +96,27 @@ struct ccnx_tlvhdr_ccnx201409_s {
 // ----------------------------------------------------------------------
 // TLV message
 
-// optional hop-by-hop (Sect 3.3)
+// optional hop-by-hop (Sect 3.3);
 // #define CCNX_TLV_O_IntLife                      1
 // #define CCNX_TLV_O_CacheTime                    2
 
-// top level(Sect 3.4)
+// top level(Sect 3.4);
 #define CCNX_TLV_TL_Interest                    0x0001
 #define CCNX_TLV_TL_Object                      0x0002
 #define CCNX_TLV_TL_ValidationAlgo              0x0003
 #define CCNX_TLV_TL_ValidationPayload           0x0004
 #define CCNX_TLV_TL_Fragment                    0x0005
 
-// global (Sect 3.5.1)
+// global (Sect 3.5.1);
 #define CCNX_TLV_G_Pad                          0x007F // TODO: correcty type?
 
-// per msg (Sect 3.6)
+// per msg (Sect 3.6);
 // 3.6.1
 #define CCNX_TLV_M_Name                         0x0000
 #define CCNX_TLV_M_Payload                      0x0001
 #define CCNX_TLV_M_ENDChunk                     0x0019 // chunking document
 
-// per name (Sect 3.6.1)
+// per name (Sect 3.6.1);
 
 #define CCNX_TLV_N_NameSegment                  0x0001
 #define CCNX_TLV_N_IPID                         0x0002
@@ -120,24 +127,23 @@ struct ccnx_tlvhdr_ccnx201409_s {
 // meta
 // ...
 
-// (opt) message TLVs (Sect 3.6.2)
+// (opt) message TLVs (Sect 3.6.2);
 
 #define CCNX_TLV_M_KeyIDRestriction             0x0002
 #define CCNX_TLV_M_ObjHashRestriction           0x0003
 #define CCNX_TLV_M_IPIDM                        0x0004
 
-// (opt) content msg TLVs (Sect 3.6.2.2)
-
+// (opt) content msg TLVs (Sect 3.6.2.2);
 #define CCNX_TLV_C_PayloadType                  0x0005
 #define CCNX_TLV_C_ExpiryTime                   0x0006
 
-// content payload type (Sect 3.6.2.2.1)
+// content payload type (Sect 3.6.2.2.1);
 #define CCNX_PAYLDTYPE_Data                     0
 #define CCNX_PAYLDTYPE_Key                      1
 #define CCNX_PAYLDTYPE_Link                     2
 #define CCNX_PAYLDTYPE_Manifest                 3
 
-// validation algorithms (Sect 3.6.4.1)
+// validation algorithms (Sect 3.6.4.1);
 #define CCNX_VALIDALGO_CRC32C                   2
 #define CCNX_VALIDALGO_HMAC_SHA256              4
 #define CCNX_VALIDALGO_VMAC_128                 5
@@ -145,7 +151,7 @@ struct ccnx_tlvhdr_ccnx201409_s {
 #define CCNX_VALIDALGO_EC_SECP_256K1            7
 #define CCNX_VALIDALGO_EC_SECP_384R1            8
 
-// validation dependent data (Sect 3.6.4.1.4)
+// validation dependent data (Sect 3.6.4.1.4);
 #define CCNX_VALIDALGO_KEYID                    9
 #define CCNX_VALIDALGO_PUBLICKEY                0x000b
 #define CCNX_VALIDALGO_CERT                     0x000c
@@ -155,4 +161,118 @@ struct ccnx_tlvhdr_ccnx201409_s {
 // #define CCNX_TLV_IntFrag                        0x0001 // TODO: correct type value?
 // #define CCNX_TLV_ObjFrag                        0x0002 // TODO: correct type value?
 
-// eof
+int
+ccnl_ccnltv_extractNetworkVarInt(unsigned char *buf, int len,
+                                 unsigned int *intval);
+
+// returns hdr length to skip before the payload starts.
+// this value depends on the type (interest/data/nack) and opt headers
+// but should be available in the fixed header
+int
+ccnl_ccntlv_getHdrLen(unsigned char *data, int len);
+
+// parse TL (returned in typ and vallen) and adjust buf and len
+int
+ccnl_ccntlv_dehead(unsigned char **buf, int *len,
+                   unsigned int *typ, unsigned int *vallen);
+
+// We use one extraction procedure for both interest and data pkts.
+// This proc assumes that the packet header was already processed and consumed
+struct ccnl_pkt_s*
+ccnl_ccntlv_bytes2pkt(unsigned char *start, unsigned char **data, int *datalen);
+
+// ----------------------------------------------------------------------
+
+#ifdef NEEDS_PREFIX_MATCHING
+
+// returns: 0=match, -1=otherwise
+int
+ccnl_ccntlv_cMatch(struct ccnl_pkt_s *p, struct ccnl_content_s *c);
+
+#endif
+
+// ----------------------------------------------------------------------
+// packet composition
+
+#ifdef NEEDS_PACKET_CRAFTING
+
+// write given TL *before* position buf+offset, adjust offset and return len
+int
+ccnl_ccntlv_prependTL(unsigned short type, unsigned short len,
+                      int *offset, unsigned char *buf);
+
+// write len bytes *before* position buf[offset], adjust offset
+int
+ccnl_ccntlv_prependBlob(unsigned short type, unsigned char *blob,
+                        unsigned short len, int *offset, unsigned char *buf);
+
+// write (in network order and with the minimal number of bytes);
+// the given unsigned integer val *before* position buf[offset], adjust offset
+// and return number of bytes prepended. 0 is represented as %x00
+int
+ccnl_ccntlv_prependNetworkVarUInt(unsigned short type, unsigned int intval,
+                                  int *offset, unsigned char *buf);
+
+#ifdef XXX
+// write (in network order and with the minimal number of bytes);
+// the given signed integer val *before* position buf[offset], adjust offset
+// and return number of bytes prepended. 0 is represented as %x00
+int
+ccnl_ccntlv_prependNetworkVarSInt(unsigned short type, int intval,
+                                  int *offset, unsigned char *buf);
+#endif
+
+// write *before* position buf[offset] the CCNx1.0 fixed header,
+// returns total packet len
+int
+ccnl_ccntlv_prependFixedHdr(unsigned char ver,
+                            unsigned char packettype,
+                            unsigned short payloadlen,
+                            unsigned char hoplimit,
+                            int *offset, unsigned char *buf);
+
+// write given prefix and chunknum *before* buf[offs], adjust offset
+// and return bytes used
+int
+ccnl_ccntlv_prependName(struct ccnl_prefix_s *name,
+                        int *offset, unsigned char *buf,
+                        unsigned int *lastchunknum);
+
+// write Interest payload *before* buf[offs], adjust offs and return bytes used
+int
+ccnl_ccntlv_prependInterest(struct ccnl_prefix_s *name,
+                            int *offset, unsigned char *buf);
+
+// write Interest packet *before* buf[offs], adjust offs and return bytes used
+int
+ccnl_ccntlv_prependChunkInterestWithHdr(struct ccnl_prefix_s *name,
+                                        int *offset, unsigned char *buf);
+
+// write Interest packet *before* buf[offs], adjust offs and return bytes used
+int
+ccnl_ccntlv_prependInterestWithHdr(struct ccnl_prefix_s *name,
+                                int *offset, unsigned char *buf);
+
+// write Content payload *before* buf[offs], adjust offs and return bytes used
+int
+ccnl_ccntlv_prependContent(struct ccnl_prefix_s *name,
+                           unsigned char *payload, int paylen,
+                           unsigned int *lastchunknum, int *contentpos,
+                           int *offset, unsigned char *buf);
+
+// write Content packet *before* buf[offs], adjust offs and return bytes used
+int
+ccnl_ccntlv_prependContentWithHdr(struct ccnl_prefix_s *name,
+                                  unsigned char *payload, int paylen,
+                                  unsigned int *lastchunknum, int *contentpos,
+                                  int *offset, unsigned char *buf);
+
+#ifdef USE_FRAG
+
+// produces a full FRAG packet. It does not write, just read the fields in *fr
+struct ccnl_buf_s*
+ccnl_ccntlv_mkFrag(struct ccnl_frag_s *fr, unsigned int *consumed);
+#endif
+
+#endif // NEEDS_PACKET_CRAFTING
+#endif /* CCNL-PKT-CCNTLV_H */

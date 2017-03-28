@@ -22,16 +22,6 @@
 
 #ifdef USE_LOGGING
 
-extern int debug_level;
-
-#define FATAL   0  // FATAL
-#define ERROR   1  // ERROR
-#define WARNING 2  // WARNING
-#define INFO    3  // INFO
-#define DEBUG   4  // DEBUG
-#define VERBOSE 5  // VERBOSE
-#define TRACE 	6  // TRACE
-
 char
 ccnl_debugLevelToChar(int level)
 {
@@ -66,47 +56,7 @@ ccnl_debugLevelToChar(int level)
 #endif
 }
 
-// ----------------------------------------------------------------------
-// _TRACE macro
-
-#ifdef CCNL_ARDUINO
-
-#define _TRACE(F,P) do {                    \
-    if (debug_level >= TRACE) { char *cp;   \
-          Serial.print("[");                \
-          Serial.print(P); \
-          Serial.print("] ");               \
-          Serial.print(timestamp());        \
-          Serial.print(": ");               \
-          strcpy_P(logstr, PSTR(__FILE__)); \
-          cp = logstr + strlen(logstr);     \
-          while (cp >= logstr && *cp != '/') cp--; \
-          Serial.print(cp+1);               \
-          Serial.print(":");                \
-          Serial.print(__LINE__);           \
-          Serial.println("\r");             \
-     }} while(0)
-
-#else
-
-#ifdef CCNL_LINUXKERNEL
-
-#define _TRACE(F,P) do {                                    \
-    if (debug_level >= TRACE) {                             \
-        printk("%s: ", THIS_MODULE->name);                  \
-        printk("%s() in %s:%d\n", (F), __FILE__, __LINE__); \
-    }} while (0)
-
-#else
-
-#define _TRACE(F,P) do {                                    \
-    if (debug_level >= TRACE) {                             \
-        fprintf(stderr, "[%c] %s: %s() in %s:%d\n",         \
-                (P), timestamp(), (F), __FILE__, __LINE__); \
-    }} while (0)
-
-#endif // CCNL_LINUXKERNEL
-
+#ifndef CCNL_ARDUINO
 int
 ccnl_debug_str2level(char *s)
 {
@@ -119,82 +69,7 @@ ccnl_debug_str2level(char *s)
     if (!strcmp(s, "verbose")) return VERBOSE;
     return 1;
 }
-
 #endif // CCNL_ARDUINO
-
-#define DEBUGSTMT(LVL, ...) do { \
-        if ((LVL)>debug_level) break; \
-        __VA_ARGS__; \
-} while (0)
-
-// ----------------------------------------------------------------------
-// DEBUGMSG macro
-
-#ifdef CCNL_LINUXKERNEL
-
-#  define DEBUGMSG(LVL, ...) do {       \
-        if ((LVL)>debug_level) break;   \
-        printk("%s: ", THIS_MODULE->name);      \
-        printk(__VA_ARGS__);            \
-    } while (0)
-#  define fprintf(fd, ...)      printk(__VA_ARGS__)
-
-#elif defined(CCNL_ANDROID)
-
-#  define DEBUGMSG(LVL, ...) do { int len;          \
-        if ((LVL)>debug_level) break;               \
-        len = sprintf(android_logstr, "[%c] %s: ",  \
-            ccnl_debugLevelToChar(LVL),             \
-            timestamp());                           \
-        len += sprintf(android_logstr+len, __VA_ARGS__);   \
-        jni_append_to_log(android_logstr);          \
-    } while (0)
-
-#elif defined(CCNL_ARDUINO)
-
-#  define DEBUGMSG_OFF(...) do{}while(0)
-#  define DEBUGMSG_ON(L,FMT, ...) do {     \
-        if ((L) <= debug_level) {       \
-          Serial.print("[");            \
-          Serial.print(ccnl_debugLevelToChar(debug_level)); \
-          Serial.print("] ");           \
-          sprintf_P(logstr, PSTR(FMT), ##__VA_ARGS__); \
-          Serial.print(timestamp());    \
-          Serial.print(" ");            \
-          Serial.print(logstr);         \
-          Serial.print("\r");           \
-        }                               \
-   } while(0)
-
-#else
-
-#  define DEBUGMSG(LVL, ...) do {                   \
-        if ((LVL)>debug_level) break;               \
-        fprintf(stderr, "[%c] %s: ",                \
-            ccnl_debugLevelToChar(LVL),             \
-            timestamp());                           \
-        fprintf(stderr, __VA_ARGS__);               \
-    } while (0)
-
-#endif
-
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-#  define TRACEIN(F)    do { _TRACE(__func__, '>'); } while (0)
-#  define TRACEOUT(F)   do { _TRACE(__func__, '<'); } while (0)
-#else
-#  define TRACEIN(F)    do { _TRACE("" F, '>'); } while (0)
-#  define TRACEOUT(F)   do { _TRACE("" F, '<'); } while (0)
-#endif
-
-// ----------------------------------------------------------------------
-
-#else // !USE_LOGGING
-#  define DEBUGSTMT(...)                   do {} while(0)
-#  define DEBUGMSG(...)                    do {} while(0)
-#  define DEBUGMSG_ON(...)                 do {} while(0)
-#  define DEBUGMSG_OFF(...)                do {} while(0)
-#  define TRACEIN(...)                     do {} while(0)
-#  define TRACEOUT(...)                    do {} while(0)
 
 #endif // USE_LOGGING
 
@@ -240,20 +115,5 @@ debug_memdump()
 }
 #endif //USE_DEBUG_MALLOC
 #endif //USE_DEBUG
-
-
-// only in the Arduino case we wish to control debugging on a module basis
-#ifndef CCNL_ARDUINO
-// core source files
-# define DEBUGMSG_CORE(...) DEBUGMSG(__VA_ARGS__)
-# define DEBUGMSG_CFWD(...) DEBUGMSG(__VA_ARGS__)
-# define DEBUGMSG_CUTL(...) DEBUGMSG(__VA_ARGS__)
-// extensions
-# define DEBUGMSG_EFRA(...) DEBUGMSG(__VA_ARGS__)
-// packet formats
-# define DEBUGMSG_PCNX(...) DEBUGMSG(__VA_ARGS__)
-# define DEBUGMSG_PIOT(...) DEBUGMSG(__VA_ARGS__)
-# define DEBUGMSG_PNDN(...) DEBUGMSG(__VA_ARGS__)
-#endif
 
 //eof

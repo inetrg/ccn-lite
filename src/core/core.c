@@ -23,6 +23,7 @@
  */
 
 #include "ccnl-ext.h"
+#include "ccnl-headers.h"
 
 #ifdef CCNL_RIOT
 #include "mutex.h"
@@ -52,8 +53,6 @@ int ccnl_i_prefixof_c(struct ccnl_prefix_s *prefix, int minsuffix,
 #define buf_dup(B)      (B) ? ccnl_buf_new(B->data, B->datalen) : NULL
 #define buf_equal(X,Y)  ((X) && (Y) && (X->datalen==Y->datalen) &&\
                          !memcmp(X->data,Y->data,X->datalen))
-
-struct ccnl_prefix_s* ccnl_prefix_new(int suite, int cnt);
 
 // ----------------------------------------------------------------------
 // addresses, interfaces and faces
@@ -1096,14 +1095,12 @@ ccnl_nonce_isDup(struct ccnl_relay_s *relay, struct ccnl_pkt_s *pkt)
 // dispatching the different formats (and respective forwarding semantics):
 
 
-#include "../pkt-formats/switch.c"
-
-#include "../pkt-formats/ccnb.c"
-#include "../pkt-formats/ccntlv.c"
-#include "../pkt-formats/cistlv.c"
-#include "../pkt-formats/iottlv.c"
-#include "../pkt-formats/ndntlv.c"
-#include "../pkt-formats/localrpc.c" // must come after pkt-ndntlv.c
+#include "ccnl-pkt-ccnb.h"
+#include "ccnl-pkt-ccntlv.h"
+#include "ccnl-pkt-cistlv.h"
+#include "ccnl-pkt-iottlv.h"
+#include "ccnl-pkt-ndntlv.h"
+#include "ccnl-pkt-localrpc.h"
 
 #include "../core/fwd.c"
 

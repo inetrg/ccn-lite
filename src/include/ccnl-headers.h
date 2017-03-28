@@ -4,6 +4,7 @@
 
 //data structure forward declarations
 
+#include <stdlib.h>
 #include <sys/time.h>
 //CCNL INCLUDES
 #include "ccnl-os-includes.h"
@@ -13,6 +14,11 @@
 #ifdef USE_NFN
 #include "ccnl-ext-nfn.h"
 #endif
+
+void *ccnl_malloc(size_t size);
+void ccnl_free(void *ptr);
+void *ccnl_calloc(size_t nmemb, size_t size);
+void *ccnl_realloc(void *ptr, size_t size);
 
 /* ccnl-core.c */
 int ccnl_prefix_cmp(struct ccnl_prefix_s *name, unsigned char *md, struct ccnl_prefix_s *p, int mode);
@@ -209,12 +215,14 @@ struct ccnl_sched_s *ccnl_sched_packetratelimiter_new(int inter_packet_interval,
 
 //---------------------------------------------------------------------------------------------------------------------------------------
 /* ccnl-core-util.c */
+void free_packet(struct ccnl_pkt_s *pkt);
 const char* ccnl_suite2str(int suite);
 int hex2int(unsigned char c);
 int unescape_component(char *comp);
 int ccnl_URItoComponents(char **compVector, unsigned int *compLens, char *uri);
 struct ccnl_prefix_s *ccnl_URItoPrefix(char *uri, int suite, char *nfnexpr, unsigned int *chunknum);
 int ccnl_pkt_mkComponent(int suite, unsigned char *dst, char *src, int srclen);
+struct ccnl_prefix_s* ccnl_prefix_new(int suite, int cnt);
 struct ccnl_prefix_s *ccnl_prefix_dup(struct ccnl_prefix_s *prefix);
 int ccnl_pkt2suite(unsigned char *data, int len, int *skip);
 char* ccnl_prefix_to_path_detailed(struct ccnl_prefix_s *pr, int ccntlv_skip, int escape_components, int call_slash);

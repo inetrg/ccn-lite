@@ -23,10 +23,11 @@
  * 2014-11-05 merged from pkt-ccnb-dec.c and pkt-ccnb-enc.c
  */
 
+#include <ctype.h>
 
-
-#ifdef USE_SUITE_CCNB
-
+#include "ccnl-defs.h"
+#include "ccnl-headers.h"
+#include "ccnl-ext-debug.h"
 #include "ccnl-pkt-ccnb.h"
 
 int
@@ -472,6 +473,5 @@ ccnl_ccnb_fillContent(struct ccnl_prefix_s *name, unsigned char *data,
 
 #endif // NEEDS_PACKET_CRAFTING
 
-#endif // USE_SUITE_CCNB
 
 // eof

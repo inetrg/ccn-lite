@@ -24,6 +24,9 @@
 #ifndef CCNL_CORE
 #define CCNL_CORE
 
+#include <stdint.h>
+#include <sys/socket.h>
+
 #ifdef CCNL_RIOT
 #include "mutex.h"
 #endif

@@ -20,8 +20,11 @@
  * 2015-01-06 created
  */
 
-#ifdef USE_SUITE_CISTLV
+#include <arpa/inet.h>
 
+#include "ccnl-defs.h"
+#include "ccnl-headers.h"
+#include "ccnl-ext-debug.h"
 #include "ccnl-pkt-cistlv.h"
 
 // ----------------------------------------------------------------------
@@ -481,7 +484,5 @@ ccnl_cistlv_prependContentWithHdr(struct ccnl_prefix_s *name,
 }
 
 #endif // NEEDS_PACKET_CRAFTING
-
-#endif // USE_SUITE_CISTLV
 
 // eof

@@ -52,6 +52,8 @@
 #include "ccnl-defs.h"
 #include "ccnl-core.h"
 #include "ccnl-ext.h"
+#include "ccnl-headers.h"
+#include "ccnl-utils.h"
 
 void ccnl_core_addToCleanup(struct ccnl_buf_s *buf);
 #define local_producer(...) 0

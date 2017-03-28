@@ -20,6 +20,14 @@
  * 2014-11-05 collected from the various fwd-XXX.c files
  */
 
+#include "ccnl-pkt-ccnb.h"
+#include "ccnl-pkt-ccntlv.h"
+#include "ccnl-pkt-cistlv.h"
+#include "ccnl-pkt-iottlv.h"
+#include "ccnl-pkt-ndntlv.h"
+#include "ccnl-pkt-localrpc.h"
+#include "ccnl-pkt-switch.h"
+
 #ifdef USE_TIMEOUT_KEEPALIVE
 int ccnl_nfn_already_computing(struct ccnl_relay_s *ccnl, struct ccnl_prefix_s *prefix);
 int ccnl_nfn_RX_intermediate(struct ccnl_relay_s *relay, struct ccnl_face_s *from, struct ccnl_pkt_s **pkt);
