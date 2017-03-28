@@ -89,11 +89,6 @@ int inet_aton(const char *cp, struct in_addr *inp);
 
 #define CONSTSTR(s)                     s
 
-#define ccnl_malloc(s)                  malloc(s)
-#define ccnl_calloc(n,s)                calloc(n,s)
-#define ccnl_realloc(p,s)               realloc(p,s)
-#define ccnl_free(p)                    free(p)
-
 #define ccnl_frag_new(a,b)                      NULL
 #define ccnl_frag_destroy(e)                    do {} while(0)
 

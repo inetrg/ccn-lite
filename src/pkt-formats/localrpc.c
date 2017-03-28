@@ -23,6 +23,7 @@
 
 #include "ccnl-defs.h"
 #include "ccnl-headers.h"
+#include "ccnl-utils.h"
 #include "ccnl-pkt-ndntlv.h"
 #include "ccnl-pkt-localrpc.h"
 

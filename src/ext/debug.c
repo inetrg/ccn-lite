@@ -570,35 +570,13 @@ get_content_dump(int lev, void *p, long *content, long *next, long *prev,
 char* timestamp(void);
 
 #ifdef USE_DEBUG_MALLOC
-
 #ifdef CCNL_ARDUINO
-
-#  define ccnl_malloc(s)        debug_malloc(s, PSTR(__FILE__), __LINE__, CCNL_NOW())
-#  define ccnl_calloc(n,s)      debug_calloc(n, s, PSTR(__FILE__), __LINE__, CCNL_NOW())
-#  define ccnl_realloc(p,s)     debug_realloc(p, s, PSTR(__FILE__), __LINE__)
-#  define ccnl_strdup(s)        debug_strdup(s, PSTR(__FILE__), __LINE__, CCNL_NOW())
-#  define ccnl_free(p)          debug_free(p, PSTR(__FILE__), __LINE__)
-#  define ccnl_buf_new(p,s)     debug_buf_new(p, s, PSTR(__FILE__), __LINE__, CCNL_NOW())
-
 void*
 debug_malloc(int s, const char *fn, int lno, double tstamp)
-
 #else
-
-#  define ccnl_malloc(s)        debug_malloc(s, __FILE__, __LINE__,timestamp())
-#  define ccnl_calloc(n,s)      debug_calloc(n, s, __FILE__, __LINE__,timestamp())
-#  define ccnl_realloc(p,s)     debug_realloc(p, s, __FILE__, __LINE__)
-#  define ccnl_strdup(s)        debug_strdup(s, __FILE__, __LINE__,timestamp())
-#  define ccnl_free(p)          debug_free(p, __FILE__, __LINE__)
-#  define ccnl_buf_new(p,s)     debug_buf_new(p, s, __FILE__, __LINE__,timestamp())
-
 void*
 debug_malloc(int s, const char *fn, int lno, char *tstamp)
-
 #endif
-
-// void*
-// debug_malloc(int s, const char *fn, int lno, char *tstamp)
 {
     struct mhdr *h = (struct mhdr *) malloc(s + sizeof(struct mhdr));
 
