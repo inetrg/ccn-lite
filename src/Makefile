@@ -197,23 +197,6 @@ ccn-lite-relay: ${CCNL_RELAY_LIB}
 %.o: %.c
 	${CC} -o $@ ${RIOT_CFLAGS} ${CCNLCFLAGS} -c $<
 
-ccn-lite-minimalrelay: platforms/ccn-lite-minimalrelay.c \
-	${SUITE_LIBS} ${CCNL_CORE_LIB}
-	${CC} -o $@ ${CCNLCFLAGS} $<
-	@${CREATE_BIN}
-
-ccn-nfn-relay: ${CCNL_RELAY_LIB}
-	${CC} -o $@ ${CCNLCFLAGS} $< ${EXTLIBS}
-	@${CREATE_BIN}
-
-ccn-nfn-relay-nack: ${CCNL_RELAY_LIB}
-	${CC} -o $@ ${CCNLCFLAGS} ${NACKFLAGS} $< ${EXTLIBS}
-	@${CREATE_BIN}
-
-ccn-lite-relay: ${CCNL_RELAY_LIB}
-	${CC} -o $@ ${CCNLCFLAGS} $< ${EXTLIBS}
-	@${CREATE_BIN}
-
 ccn-lite-relay-nack: ${CCNL_RELAY_LIB}
 	${CC} -o $@ ${CCNLCFLAGS} ${NACKFLAGS} $< ${EXTLIBS}
 	@${CREATE_BIN}
