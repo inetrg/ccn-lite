@@ -23,6 +23,9 @@
 
 // ----------------------------------------------------------------------
 
+#include "ccnl-core.h"
+#include "ccnl-headers.h"
+
 #define CCN_UDP_PORT            9695
 #define CCN_DEFAULT_MTU         4096
 

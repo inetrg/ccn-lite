@@ -114,18 +114,6 @@ timestamp(void)
 #if defined(CCNL_UNIX) || defined (CCNL_RIOT) || defined (CCNL_ARDUINO)
 // ----------------------------------------------------------------------
 
-struct ccnl_timer_s {
-    struct ccnl_timer_s *next;
-    struct timeval timeout;
-    void (*fct)(char,int);
-    void (*fct2)(void*,void*);
-    char node;
-    int intarg;
-    void *aux1;
-    void *aux2;
-  //    int handler;
-};
-
 struct ccnl_timer_s *eventqueue;
 
 void

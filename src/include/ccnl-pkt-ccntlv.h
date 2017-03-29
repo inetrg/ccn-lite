@@ -27,6 +27,9 @@
 #include <string.h>
 #include <arpa/inet.h>
 
+#include "ccnl-core.h"
+
+
 #ifndef CCN_UDP_PORT
 # define CCN_UDP_PORT                    9695
 #endif

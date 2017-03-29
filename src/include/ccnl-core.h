@@ -28,6 +28,7 @@
 #include <sys/socket.h>
 
 #include "ccnl-defs.h"
+#include "ccnl-os-includes.h"
 
 #ifdef CCNL_RIOT
 #include "mutex.h"
@@ -58,6 +59,14 @@
  * 6 is enough */
 #define CCNL_LLADDR_STR_MAX_LEN    (3 * 6)
 #endif
+
+// ----------------------------------------------------------------------
+// datastructure support functions
+
+#define buf_dup(B)      (B) ? ccnl_buf_new(B->data, B->datalen) : NULL
+#define buf_equal(X,Y)  ((X) && (Y) && (X->datalen==Y->datalen) &&\
+                         !memcmp(X->data,Y->data,X->datalen))
+
 // ----------------------------------------------------------------------
 
 #ifdef USE_WPAN
@@ -383,6 +392,10 @@ struct ccnl_lambdaTerm_s {
        if ((e)->prev) (e)->prev->next = (e)->next; \
        if ((e)->next) (e)->next->prev = (e)->prev; \
   } while(0)
+
+char ccnl_debugLevelToChar(int level);
+void debug_memdump(void);
+int ccnl_debug_str2level(char *s);
 
 #endif /*CCNL_CORE*/
 // eof

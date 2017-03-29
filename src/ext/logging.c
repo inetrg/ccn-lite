@@ -22,6 +22,8 @@
 
 #ifdef USE_LOGGING
 
+#include "ccnl-core.h"
+
 char
 ccnl_debugLevelToChar(int level)
 {

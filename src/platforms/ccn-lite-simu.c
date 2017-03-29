@@ -24,28 +24,6 @@
  * 2014-12-18 removed log generation (cft)
  */
 
-
-#define CCNL_SIMULATION
-#define CCNL_UNIX
-
-#define USE_DEBUG
-#define USE_DEBUG_MALLOC
-#define USE_DUP_CHECK
-#define USE_LINKLAYER
-#define USE_FRAG
-#define USE_IPV4
-#define USE_LOGGING
-//#define USE_SCHEDULER
-#define USE_SUITE_CCNB
-#define USE_SUITE_CCNTLV
-#define USE_SUITE_CISTLV
-#define USE_SUITE_IOTTLV
-#define USE_SUITE_NDNTLV
-
-#define NEEDS_PREFIX_MATCHING
-#define NEEDS_PACKET_CRAFTING
-
-
 #include <inttypes.h>
 #include "ccnl-os-includes.h"
 

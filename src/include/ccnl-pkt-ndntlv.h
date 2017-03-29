@@ -23,6 +23,9 @@
 #ifndef CCNL_PKT_NDNTLV_H
 #define CCNL_PKT_NDNTLV_H
 
+#include "ccnl-core.h"
+
+
 #define NDN_UDP_PORT                    6363
 #define NDN_DEFAULT_MTU                 4096
 

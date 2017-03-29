@@ -21,9 +21,13 @@
  * 2014-11-05 merged from pkt-ndntlv-enc.c pkt-ndntlv-dec.c
  */
 
-#include "ccnl-pkt-ndntlv.h"
-
 #ifdef USE_SUITE_NDNTLV
+
+#include <netinet/in.h>
+#include "ccnl-headers.h"
+#include "ccnl-pkt-ndntlv.h"
+#include "ccnl-ext-debug.h"
+#include "ccnl-utils.h"
 
 // ----------------------------------------------------------------------
 // packet parsing

@@ -23,6 +23,9 @@
 #ifndef CCNL_PKT_IOTTLV_H
 #define CCNL_PKT_IOTTLV_H
 
+#include "ccnl-core.h"
+
+
 // ----------------------------------------------------------------------
 // Header
 

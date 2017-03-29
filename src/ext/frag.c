@@ -60,6 +60,7 @@
 #endif
 #include "ccnl-headers.h"
 #include "ccnl-ext.h"
+#include "ccnl-frag.h"
 
 #define DEBUGMSG_EFRA(...) DEBUGMSG(__VA_ARGS__)
 

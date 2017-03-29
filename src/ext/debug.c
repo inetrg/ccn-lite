@@ -23,10 +23,15 @@
  */
 
 #ifdef USE_DEBUG
-#  define USE_LOGGING
+#  ifndef USE_LOGGING
+#    define USE_LOGGING
+#  endif
 #endif
 
+#include "ccnl-ext.h"
 #include "ccnl-ext-debug.h"
+#include "ccnl-headers.h"
+#include "ccnl-utils.h"
 
 #ifdef CCNL_ARDUINO
 #  define CONSOLE(FMT, ...)   do { \
@@ -567,8 +572,6 @@ get_content_dump(int lev, void *p, long *content, long *next, long *prev,
 
 // -----------------------------------------------------------------
 
-char* timestamp(void);
-
 #ifdef USE_DEBUG_MALLOC
 #ifdef CCNL_ARDUINO
 void*
@@ -735,20 +738,6 @@ debug_buf_new(void *data, int len, const char *fn, int lno, char *tstamp)
 #  define ccnl_strdup(s)        strdup(s)
 #  define ccnl_free(p)          free(p)
 # endif
-
-struct ccnl_buf_s*
-ccnl_buf_new(void *data, int len)
-{
-    struct ccnl_buf_s *b = (struct ccnl_buf_s*) ccnl_malloc(sizeof(*b) + len);
-
-    if (!b)
-        return NULL;
-    b->next = NULL;
-    b->datalen = len;
-    if (data)
-        memcpy(b->data, data, len);
-    return b;
-}
 
 #endif // !USE_DEBUG_MALLOC
 

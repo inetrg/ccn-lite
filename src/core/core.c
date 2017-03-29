@@ -38,6 +38,22 @@ int ccnl_nfnprefix_isCompute(struct ccnl_prefix_s *p);
 int ccnl_nfn_already_computing(struct ccnl_relay_s *ccnl, struct ccnl_prefix_s *prefix);
 #endif
 
+#ifndef USE_DEBUG_MALLOC
+struct ccnl_buf_s*
+ccnl_buf_new(void *data, int len)
+{
+    struct ccnl_buf_s *b = (struct ccnl_buf_s*) ccnl_malloc(sizeof(*b) + len);
+
+    if (!b)
+        return NULL;
+    b->next = NULL;
+    b->datalen = len;
+    if (data)
+        memcpy(b->data, data, len);
+    return b;
+}
+#endif
+
 // forward reference:
 void ccnl_interest_broadcast(struct ccnl_relay_s *ccnl,
                              struct ccnl_interest_s *interest);
@@ -46,13 +62,6 @@ int ccnl_prefix_cmp(struct ccnl_prefix_s *name, unsigned char *md,
                     struct ccnl_prefix_s *p, int mode);
 int ccnl_i_prefixof_c(struct ccnl_prefix_s *prefix, int minsuffix,
                       int maxsuffix, struct ccnl_content_s *c);
-
-// ----------------------------------------------------------------------
-// datastructure support functions
-
-#define buf_dup(B)      (B) ? ccnl_buf_new(B->data, B->datalen) : NULL
-#define buf_equal(X,Y)  ((X) && (Y) && (X->datalen==Y->datalen) &&\
-                         !memcmp(X->data,Y->data,X->datalen))
 
 // ----------------------------------------------------------------------
 // addresses, interfaces and faces

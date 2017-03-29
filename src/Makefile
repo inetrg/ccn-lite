@@ -126,13 +126,14 @@ ifeq ($(GCC_GTEQ_40900),1)
 endif
 obj-m += ccn-lite-lnxkernel.o
 
+PKTSWITCH_LIB = include/ccnl-pkt-switch.h pkt-formats/switch.c
 CCNB_LIB =   include/ccnl-pkt-ccnb.h pkt-formats/ccnb.c lib-sha256.c
 CCNTLV_LIB = include/ccnl-pkt-ccntlv.h pkt-formats/ccntlv.c
 CISTLV_LIB = include/ccnl-pkt-cistlv.h pkt-formats/cistlv.c
 IOTTLV_LIB = include/ccnl-pkt-iottlv.h pkt-formats/iottlv.c
 NDNTLV_LIB = include/ccnl-pkt-ndntlv.h pkt-formats/ndntlv.c
 LOCALRPC_LIB = include/ccnl-pkt-localrpc.h pkt-formats/localrpc.c ext/localrpc.c
-SUITE_LIBS = ${CCNB_LIB} ${CCNTLV_LIB} ${CISTLV_LIB} ${IOTTLV_LIB} ${NDNTLV_LIB} ${LOCALRPC_LIB}
+SUITE_LIBS = ${PKTSWITCH_LIB} ${CCNB_LIB} ${CCNTLV_LIB} ${CISTLV_LIB} ${IOTTLV_LIB} ${NDNTLV_LIB} ${LOCALRPC_LIB}
 
 UTIL_OBJS := util/base64.o util/common.o
 SUITE_OBJS := pkt-formats/ccnb.o pkt-formats/ccntlv.o pkt-formats/cistlv.o \
@@ -201,11 +202,15 @@ ccn-lite-relay-nack: ${CCNL_RELAY_LIB}
 	${CC} -o $@ ${CCNLCFLAGS} ${NACKFLAGS} $< ${EXTLIBS}
 	@${CREATE_BIN}
 
+ccn-lite-simu: CCNLCFLAGS += -DNEEDS_PREFIX_MATCHING -DNEEDS_PACKET_CRAFTING -DUSE_FRAG \
+	-DUSE_SUITE_NDNTLV -DUSE_SUITE_CCNB -DUSE_SUITE_CCNTLV -DUSE_DEBUG -DUSE_DEBUG_MALLOC \
+	-DUSE_DUP_CHECK -DUSE_LINKLAYER -DUSE_IPV4 -DUSE_LOGGING -DUSE_SUITE_CISTLV -DUSE_SUITE_IOTTLV \
+	-DCCNL_UNIX -DCCNL_SIMULATION
 ccn-lite-simu: platforms/ccn-lite-simu.c  ${SUITE_OBJS} \
 	${CCNL_CORE_LIB} ${CCNL_PLATFORM_LIB} \
 	ccnl-simu-client.c
 	${EXTMAKE}
-	${CC} -o $@ ${CCNLCFLAGS} $< ${EXTLIBS}
+	${CC} -o $@ ${CCNLCFLAGS} $< ${SUITE_LIBS} ${EXTLIBS}
 	@${CREATE_BIN}
 
 ccn-lite-omnet:  ${OMNET_DEPS}

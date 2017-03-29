@@ -54,4 +54,90 @@ struct ccnl_buf_s* debug_buf_new(void *data, int len, const char *fn, int lno, c
 #define free_content(c) do{ /* free_prefix(c->name); */ free_packet(c->pkt); \
                         ccnl_free(c); } while(0)
 
+/* translates link-layer address into a string */
+char* ll2ascii(unsigned char *addr, size_t len);
+
+// --- time
+
+char* timestamp(void);
+
+#ifdef CCNL_ARDUINO
+
+double CCNL_NOW(void);
+
+struct timeval {
+    uint32_t tv_sec;
+    uint32_t tv_usec;
+};
+
+void gettimeofday(struct timeval *tv, void *dummy);
+
+#else // !CCNL_ARDUINO
+
+#define CCNL_NOW()                    current_time()
+
+#ifndef CCNL_LINUXKERNEL
+double current_time(void);
+#endif
+
+#endif // !CCNL_ARDUINO
+
+#ifdef CCNL_UNIX
+
+#ifndef CCNL_OMNET
+#  define CCNL_NOW()                    current_time()
+#endif
+
+#endif // CCNL_UNIX
+
+
+#if defined(CCNL_UNIX) || defined (CCNL_RIOT) || defined (CCNL_ARDUINO)
+
+struct ccnl_timer_s {
+    struct ccnl_timer_s *next;
+    struct timeval timeout;
+    void (*fct)(char,int);
+    void (*fct2)(void*,void*);
+    char node;
+    int intarg;
+    void *aux1;
+    void *aux2;
+  //    int handler;
+};
+
+void ccnl_get_timeval(struct timeval *tv);
+long timevaldelta(struct timeval *a, struct timeval *b);
+void* ccnl_set_timer(uint64_t usec, void (*fct)(void *aux1, void *aux2), void *aux1, void *aux2);
+void ccnl_rem_timer(void *h);
+
+#endif
+
+#ifdef CCNL_LINUXKERNEL
+
+// we use the kernel's timerlist service, i.e. add_timer()
+
+struct ccnl_timerlist_s {
+    struct timer_list tl;
+    void (*fct)(void *ptr, void *aux);
+    void *ptr, *aux;
+};
+
+static struct ccnl_timerlist_s *spare_timer;
+
+inline void ccnl_get_timeval(struct timeval *tv);
+int current_time(void);
+static void ccnl_timer_callback(unsigned long data);
+static void* ccnl_set_timer(int usec, void(*fct)(void*,void*), void *ptr, void *aux);
+static void ccnl_rem_timer(void *p);
+
+#else
+
+int ccnl_run_events(void);
+
+#endif // CCNL_LINUXKERNEL
+
+#ifdef USE_SCHEDULER
+void* ccnl_set_absolute_timer(struct timeval abstime, void (*fct)(void *aux1, void *aux2), void *aux1, void *aux2);
+#endif
+
 #endif /* CCNL-UTILS_H */
