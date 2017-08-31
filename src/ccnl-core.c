@@ -469,12 +469,23 @@ ccnl_interest_append_pending(struct ccnl_interest_s *i,
         return -1;
     }
     DEBUGMSG_CORE(DEBUG, "  appending a new pendint entry %p\n", (void *) pi);
+
     pi->face = from;
     pi->last_used = CCNL_NOW();
     if (last)
         last->next = pi;
-    else
+    else {
+
+#ifdef ALLOW_DATA_BCAST
+        uint8_t bcast={0xff};
+        struct sockaddr_ll *ll = &from->peer.linklayer;
+        for (unsigned i = 0; i < ll->sll_halen; i++) {
+            memcpy(&ll->sll_addr[i], &bcast, 1);
+        }
+#endif /* ALLOW_DATA_BCAST */
+
         i->pending = pi;
+    }
     return 0;
 }
 
@@ -892,6 +903,15 @@ ccnl_content_serve_pending(struct ccnl_relay_s *ccnl, struct ccnl_content_s *c)
                         memcpy(&nonce, i->pkt->s.ndntlv.nonce->data, 4);
                     }
                 }
+
+#ifdef ALLOW_DATA_BCAST
+        uint8_t bcast={0xff};
+        struct sockaddr_ll *ll = &pi->face->peer.linklayer;
+        for (unsigned i = 0; i < ll->sll_halen; i++) {
+            memcpy(&ll->sll_addr[i], &bcast, 1);
+        }
+        // printf(" SET src=%s\n", ccnl_addr2ascii((sockunion*)&from->peer));
+#endif /* ALLOW_DATA_BCAST */
 
                 char *s = NULL;
                 DEBUGMSG_CFWD(INFO, "  outgoing data=<%s>%s nonce=%"PRIi32" to=%s\n",

@@ -270,6 +270,16 @@ ccnl_fwd_handleInterest(struct ccnl_relay_s *relay, struct ccnl_face_s *from,
             continue;
 
         DEBUGMSG_CFWD(DEBUG, "  found matching content %p\n", (void *) c);
+
+#ifdef ALLOW_DATA_BCAST
+        uint8_t bcast={0xff};
+        struct sockaddr_ll *ll = &from->peer.linklayer;
+        for (unsigned i = 0; i < ll->sll_halen; i++) {
+            memcpy(&ll->sll_addr[i], &bcast, 1);
+        }
+        //printf(" SET src=%s\n", ccnl_addr2ascii((sockunion*)&from->peer));
+#endif /* ALLOW_DATA_BCAST */
+
         if (from->ifndx >= 0) {
             ccnl_nfn_monitor(relay, from, c->pkt->pfx, c->pkt->content,
                              c->pkt->contlen);
